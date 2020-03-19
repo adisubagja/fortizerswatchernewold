@@ -333,7 +333,7 @@ def slap(update, context):
 
     # if no target found, bot targets the sender
     else:
-        user1 = "[{}](tg://user?id={})".format(bot.first_name, bot.id)
+        user1 = "[{}](tg://user?id={})".format(context.bot.first_name, context.bot.id)
         user2 = curr_user
 
     temp = random.choice(SLAP_TEMPLATES)

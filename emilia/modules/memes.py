@@ -331,7 +331,7 @@ def deepfryer(update, context):
         photodata = data[len(data) - 1].get_file().download_as_bytearray()
         image = Image.open(io.BytesIO(photodata))
     elif data2:
-        sticker = bot.get_file(data2.file_id)
+        sticker = context.bot.get_file(data2.file_id)
         sticker.download('sticker.png')
         image = Image.open("sticker.png")
 
@@ -368,11 +368,12 @@ async def process_deepfry(image: Image, reply: Message, update, context):
 
 
 @run_async
-def shout(bot: Bot, update: Update, args):
+def shout(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
     args = context.args
+
     if len(args) == 0:
         update.effective_message.reply_text("Where is text?")
         return

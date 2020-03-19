@@ -34,71 +34,6 @@ from emilia.modules.sql import languages_sql as langsql
 from emilia.modules.languages import tl
 from emilia.modules.helper_funcs.alternate import send_message
 
-@run_async
-def stickerid(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
-	msg = update.effective_message
-	if msg.reply_to_message and msg.reply_to_message.sticker:
-		send_message(update.effective_message, tl(update.effective_message, "Hai {}, Id stiker yang anda balas adalah :\n```{}```").format(mention_markdown(msg.from_user.id, msg.from_user.first_name), msg.reply_to_message.sticker.file_id),
-											parse_mode=ParseMode.MARKDOWN)
-	else:
-		send_message(update.effective_message, tl(update.effective_message, "Tolong balas pesan stiker untuk mendapatkan id stiker"),
-											parse_mode=ParseMode.MARKDOWN)
-
-@run_async
-def getsticker(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
-	msg = update.effective_message
-	chat_id = update.effective_chat.id
-	if msg.reply_to_message and msg.reply_to_message.sticker:
-		send_message(update.effective_message, "Hai " + "[{}](tg://user?id={})".format(msg.from_user.first_name,
-											msg.from_user.id) + ", Silahkan cek file yang anda minta dibawah ini."
-											"\nTolong gunakan fitur ini dengan bijak!",
-											parse_mode=ParseMode.MARKDOWN)
-		context.bot.sendChatAction(chat_id, "upload_document")
-		file_id = msg.reply_to_message.sticker.file_id
-		newFile = context.bot.get_file(file_id)
-		newFile.download('sticker.png')
-		context.bot.sendDocument(chat_id, document=open('sticker.png', 'rb'))
-		context.bot.sendChatAction(chat_id, "upload_photo")
-		context.bot.send_photo(chat_id, photo=open('sticker.png', 'rb'))
-		
-	else:
-		send_message(update.effective_message, "Hai " + "[{}](tg://user?id={})".format(msg.from_user.first_name,
-											msg.from_user.id) + ", Tolong balas pesan stiker untuk mendapatkan gambar stiker",
-											parse_mode=ParseMode.MARKDOWN)
-
-@run_async
-def stiker(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
-	chat_id = update.effective_chat.id
-	args = update.effective_message.text.split(None, 1)
-	message = update.effective_message
-	message.delete()
-	if message.reply_to_message:
-		context.bot.sendSticker(chat_id, args[1], reply_to_message_id=message.reply_to_message.message_id)
-	else:
-		context.bot.sendSticker(chat_id, args[1])
-
-@run_async
-def file(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
-	chat_id = update.effective_chat.id
-	args = update.effective_message.text.split(None, 1)
-	message = update.effective_message
-	message.delete()
-	if message.reply_to_message:
-		context.bot.sendDocument(chat_id, args[1], reply_to_message_id=message.reply_to_message.message_id)
-	else:
-		context.bot.sendDocument(chat_id, args[1])
 
 @run_async
 def getlink(update, context):
@@ -333,13 +268,9 @@ def deEmojify(inputString):
 
 __help__ = "exclusive_help"
 
-__mod_name__ = "💖 Exclusive Emilia 💖"
+__mod_name__ = "🚀 Hitsuki Exclusive 🚀"
 
-STICKERID_HANDLER = DisableAbleCommandHandler("stickerid", stickerid)
-#GETSTICKER_HANDLER = DisableAbleCommandHandler("getsticker", getsticker)
 PING_HANDLER = DisableAbleCommandHandler("ping", ping)
-STIKER_HANDLER = CommandHandler("stiker", stiker, filters=Filters.user(OWNER_ID))
-FILE_HANDLER = CommandHandler("file", file, filters=Filters.user(OWNER_ID))
 GETLINK_HANDLER = CommandHandler("getlink", getlink, pass_args=True, filters=Filters.user(OWNER_ID))
 LEAVECHAT_HANDLER = CommandHandler(["leavechat", "leavegroup", "leave"], leavechat, pass_args=True, filters=Filters.user(OWNER_ID))
 RAMALAN_HANDLER = DisableAbleCommandHandler("fortune", ramalan)
@@ -349,10 +280,6 @@ UD_HANDLER = DisableAbleCommandHandler("ud", urbandictionary, pass_args=True)
 LOG_HANDLER = DisableAbleCommandHandler("log", log, filters=Filters.user(OWNER_ID))
 
 dispatcher.add_handler(PING_HANDLER)
-dispatcher.add_handler(STICKERID_HANDLER)
-#dispatcher.add_handler(GETSTICKER_HANDLER)
-dispatcher.add_handler(STIKER_HANDLER)
-dispatcher.add_handler(FILE_HANDLER)
 dispatcher.add_handler(GETLINK_HANDLER)
 dispatcher.add_handler(LEAVECHAT_HANDLER)
 dispatcher.add_handler(RAMALAN_HANDLER)
