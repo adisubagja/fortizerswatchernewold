@@ -129,6 +129,18 @@ If you really are interested in donating, please visit ayrahikari.github.io/dona
  - /demote: demotes the user replied to
 """,
 
+# MyAnimeList
+"myanimelist_help": """
+Get information about anime, manga or characters from [MyAnimeList](https://myanimelist.net).
+
+*Available commands:*
+
+ - /anime <anime>: returns information about the anime.
+ - /character <character>: returns information about the character.
+ - /manga <manga>: returns information about the manga.
+ - /upcoming: returns a list of new anime in the upcoming seasons.
+""",
+
 # AFK
 	"{} sekarang AFK!": "{} is now AFK!",
 	"{} sudah tidak AFK!": "{} is no longer AFK!",
