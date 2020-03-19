@@ -92,10 +92,10 @@ def new_fed(update, context):
 		LOGGER.info(fed_id)
 
 		# Currently only for creator
-		if fednam == "Team Nusantara Disciplinary Circle":
-			fed_id = "TeamNusantaraDevs"
-		elif fednam == "Emilia Official Support":
-			fed_id = "EmiliaSupport"
+		if fednam == "Anti-Spam Therapy":
+			fed_id = "AntiSpamTherapy"
+		elif fednam == "Hitsuki Official":
+			fed_id = "HitsukiOfficial"
 
 		x = sql.new_fed(user.id, fed_name, fed_id)
 		if not x:
