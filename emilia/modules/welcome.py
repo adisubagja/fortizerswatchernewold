@@ -110,6 +110,7 @@ def new_member(update, context):
 	chat = update.effective_chat  # type: Optional[Chat]
 
 	should_welc, cust_welcome, cust_content, welc_type = sql.get_welc_pref(chat.id)
+
 	isAllowed = sql.isWhitelisted(str(chat.id))
 
 	if isAllowed or user.id in SUDO_USERS:
