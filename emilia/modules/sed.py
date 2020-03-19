@@ -114,5 +114,5 @@ __mod_name__ = "Sed/Regex"
 
 
 SED_HANDLER = MessageHandler(Filters.regex(r's([{}]).*?\1.*'.format("".join(DELIMITERS)), sed, friendly="sed")
- 
+
 dispatcher.add_handler(SED_HANDLER)
