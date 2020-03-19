@@ -373,6 +373,125 @@ def weebify(update, context):
         msg.reply_text(string)
 
 
+BASE_URL = 'https://del.dog'
+
+
+@run_async
+def paste(update, context):
+    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
+    if spam == True:
+        return
+    args = context.args
+    message = update.effective_message
+
+    if message.reply_to_message:
+        data = message.reply_to_message.text
+    elif len(args) >= 1:
+        data = message.text.split(None, 1)[1]
+    else:
+        message.reply_text("What am I supposed to do with this?!")
+        return
+
+    r = requests.post(f'{BASE_URL}/documents', data=data.encode('utf-8'))
+
+    if r.status_code == 404:
+        update.effective_message.reply_text('Failed to reach dogbin')
+        r.raise_for_status()
+
+    res = r.json()
+
+    if r.status_code != 200:
+        update.effective_message.reply_text(res['message'])
+        r.raise_for_status()
+
+    key = res['key']
+    if res['isUrl']:
+        reply = f'Shortened URL: {BASE_URL}/{key}\nYou can view stats, etc. [here]({BASE_URL}/v/{key})'
+    else:
+        reply = f'{BASE_URL}/{key}'
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+
+
+@run_async
+def get_paste_content(update, context):
+    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
+    if spam == True:
+        return
+    args = context.args
+    message = update.effective_message
+
+    if len(args) >= 1:
+        key = args[0]
+    else:
+        message.reply_text("Please supply a paste key!")
+        return
+
+    format_normal = f'{BASE_URL}/'
+    format_view = f'{BASE_URL}/v/'
+
+    if key.startswith(format_view):
+        key = key[len(format_view):]
+    elif key.startswith(format_normal):
+        key = key[len(format_normal):]
+
+    r = requests.get(f'{BASE_URL}/raw/{key}')
+
+    if r.status_code != 200:
+        try:
+            res = r.json()
+            update.effective_message.reply_text(res['message'])
+        except Exception:
+            if r.status_code == 404:
+                update.effective_message.reply_text('Failed to reach dogbin')
+            else:
+                update.effective_message.reply_text('Unknown error occured')
+        r.raise_for_status()
+
+    update.effective_message.reply_text('```' + escape_markdown(r.text) + '```', parse_mode=ParseMode.MARKDOWN)
+
+
+@run_async
+def get_paste_stats(update, context):
+    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
+    if spam == True:
+        return
+    args = context.args
+    message = update.effective_message
+
+    if len(args) >= 1:
+        key = args[0]
+    else:
+        message.reply_text("Please supply a paste key!")
+        return
+
+    format_normal = f'{BASE_URL}/'
+    format_view = f'{BASE_URL}/v/'
+
+    if key.startswith(format_view):
+        key = key[len(format_view):]
+    elif key.startswith(format_normal):
+        key = key[len(format_normal):]
+
+    r = requests.get(f'{BASE_URL}/documents/{key}')
+
+    if r.status_code != 200:
+        try:
+            res = r.json()
+            update.effective_message.reply_text(res['message'])
+        except Exception:
+            if r.status_code == 404:
+                update.effective_message.reply_text('Failed to reach dogbin')
+            else:
+                update.effective_message.reply_text('Unknown error occured')
+        r.raise_for_status()
+
+    document = r.json()['document']
+    key = document['_id']
+    views = document['viewCount']
+    reply = f'Stats for **[/{key}]({BASE_URL}/{key})**:\nViews: `{views}`'
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.MARKDOWN)
+
+
 @run_async
 def pat(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
@@ -550,6 +669,29 @@ def echo(update, context):
 
 
 @run_async
+def sudo_list(update, context):
+    reply = "<b>Sudo Users:</b>\n"
+    for sudo in SUDO_USERS:
+        user_id = int(sudo) # Ensure int
+        user = context.bot.get_chat(user_id)
+        first_name = user.first_name
+        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(user_id, first_name)
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
+
+
+@run_async
+def support_list(update, context):
+    reply = "<b>Support Users:</b>\n"
+    for support in SUPPORT_USERS:
+        user_id = int(support) # Ensure int
+        user = context.bot.get_chat(user_id)
+        first_name = user.first_name.replace(">", ">")
+        first_name = first_name.replace("<", "<")
+        reply += """• <a href="tg://user?id={}">{}</a>\n""".format(user_id, first_name)
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
+
+
+@run_async
 def markdown_help(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
@@ -578,8 +720,14 @@ RUNS_HANDLER = DisableAbleCommandHandler("runs", runs)
 SLAP_HANDLER = DisableAbleCommandHandler("slap", slap, pass_args=True)
 INFO_HANDLER = DisableAbleCommandHandler("info", info, pass_args=True)
 
+PASTE_HANDLER = CommandHandler("paste", paste, pass_args=True)
+GET_PASTE_HANDLER = CommandHandler("getpaste", get_paste_content, pass_args=True)
+PASTE_STATS_HANDLER = CommandHandler("pastestats", get_paste_stats, pass_args=True)
+
 ECHO_HANDLER = CommandHandler("echo", echo, filters=Filters.user(OWNER_ID))
 MD_HELP_HANDLER = CommandHandler("markdownhelp", markdown_help, filters=Filters.private)
+SUDO_LIST_HANDLER = CommandHandler("sudolist", sudo_list, filters=CustomFilters.sudo_filter)
+SUPPORT_LIST_HANDLER = CommandHandler("supportlist", support_list, filters=CustomFilters.sudo_filter)
 
 STATS_HANDLER = CommandHandler("stats", stats, filters=CustomFilters.sudo_filter)
 WEEBIFY_HANDLER = DisableAbleCommandHandler("weebify", weebify, pass_args=True)
@@ -599,3 +747,8 @@ dispatcher.add_handler(INFO_HANDLER)
 dispatcher.add_handler(ECHO_HANDLER)
 dispatcher.add_handler(MD_HELP_HANDLER)
 dispatcher.add_handler(STATS_HANDLER)
+dispatcher.add_handler(SUDO_LIST_HANDLER)
+dispatcher.add_handler(SUPPORT_LIST_HANDLER)
+dispatcher.add_handler(PASTE_HANDLER)
+dispatcher.add_handler(GET_PASTE_HANDLER)
+dispatcher.add_handler(PASTE_STATS_HANDLER)
