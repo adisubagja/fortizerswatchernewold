@@ -17,22 +17,25 @@ from telegram.ext import CommandHandler, run_async, Filters, RegexHandler
 from telegram import Message, Chat, Update, Bot, User, ParseMode, InlineKeyboardMarkup, MAX_MESSAGE_LENGTH
 
 
-def getData(url):
+#do not async
+def getData(url, index):
     if not api.getData(url):
         return "Invalid <user>/<repo> combo"
-    recentRelease = api.getReleaseData(api.getData(url))
+    recentRelease = api.getReleaseData(api.getData(url), index)
+    if recentRelease is None:
+        return "The specified release could not be found"
     author = api.getAuthor(recentRelease)
     authorUrl = api.getAuthorUrl(recentRelease)
     name = api.getReleaseName(recentRelease)
     assets = api.getAssets(recentRelease)
     releaseName = api.getReleaseName(recentRelease)
-    message = "<b>Author:</b> <a href='{}'>{}</a> \n".format(authorUrl, author)
+    message = "Author: [{}]({})\n".format(author, authorUrl)
     message += "Release Name: "+releaseName+"\n\n"
     for asset in assets:
-        message += "<b>Asset:</b> \n"
+        message += "*Asset:* \n"
         fileName = api.getReleaseFileName(asset)
         fileURL = api.getReleaseFileURL(asset)
-        assetFile = "<a href='{}'>{}</a>".format(fileURL, fileName)
+        assetFile = "[{}]({})".format(fileName, fileURL)
         sizeB = ((api.getSize(asset))/1024)/1024
         size = "{0:.2f}".format(sizeB)
         downloadCount = api.getDownloadCount(asset)
@@ -46,7 +49,7 @@ def getRepo(update, context, reponame):
     chat_id = update.effective_chat.id
     repo = sql.get_repo(str(chat_id), reponame)
     if repo:
-        return repo.value
+        return repo.value, repo.backoffset
     return None
 
 @run_async
@@ -56,12 +59,15 @@ def getRelease(update, context):
     if spam == True:
         return
     msg = update.effective_message
-    if(len(args) != 1):
+    if(len(args) != 1 and not (len(args) == 2 and args[1].isdigit())):
         msg.reply_text("Please specify a valid combination of <user>/<repo>")
         return
+    index = 0
+    if len(args) == 2:
+        index = int(args[1])
     url = args[0]
-    text = getData(url)
-    msg.reply_text(text, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    text = getData(url, index)
+    msg.reply_text(text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     return
 
 @run_async
@@ -71,9 +77,9 @@ def hashFetch(update, context):
     msg = update.effective_message
     fst_word = message.split()[0]
     no_hash = fst_word[1:]
-    url = getRepo(bot, update, no_hash)
-    text = getData(url)
-    msg.reply_text(text, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    url, index = getRepo(context.bot, update, no_hash)
+    text = getData(url, index)
+    msg.reply_text(text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     return
     
 @run_async
@@ -83,9 +89,9 @@ def cmdFetch(update, context):
     if(len(args) != 1):
         msg.reply_text("Invalid repo name")
         return
-    url = getRepo(bot, update, args[0])
-    text = getData(url)
-    msg.reply_text(text, parse_mode=ParseMode.HTML, disable_web_page_preview=True)
+    url, index = getRepo(context.bot, update, args[0])
+    text = getData(url, index)
+    msg.reply_text(text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
     return
 
 
@@ -96,12 +102,12 @@ def changelog(update, context):
     if(len(args) != 1):
         msg.reply_text("Invalid repo name")
         return
-    url = getRepo(context.bot, update, args[0])
+    url, index = getRepo(context.bot, update, args[0])
     if not api.getData(url):
         msg.reply_text("Invalid <user>/<repo> combo")
         return
     data = api.getData(url)
-    release = api.getReleaseData(data)
+    release = api.getReleaseData(data, index)
     body = api.getBody(release)
     msg.reply_text(body)
     return
@@ -113,11 +119,14 @@ def saveRepo(update, context):
     args = context.args
     chat_id = update.effective_chat.id
     msg = update.effective_message
-    if(len(args) != 2):
-        msg.reply_text(tl(chat_id, "Invalid data, use <reponame> <user>/<repo>"))
+    if(len(args) != 2 and (len(args) != 3 and not args[2].isdigit())):
+        msg.reply_text("Invalid data, use <reponame> <user>/<repo> <value (optional)>")
         return
-    sql.add_repo_to_db(str(chat_id), args[0], args[1])
-    msg.reply_text(tl(chat_id, "Repo shortcut saved successfully!"))
+    index = 0
+    if len(args) == 3:
+        index = int(args[2])
+    sql.add_repo_to_db(str(chat_id), args[0], args[1], index)
+    msg.reply_text("Repo shortcut saved successfully!")
     return
     
 @run_async
@@ -127,10 +136,10 @@ def delRepo(update, context):
     chat_id = update.effective_chat.id
     msg = update.effective_message
     if(len(args)!=1):
-        msg.reply_text(tl(chat_id, "Invalid repo name!"))
+        msg.reply_text("Invalid repo name!")
         return
     sql.rm_repo(str(chat_id), args[0])
-    msg.reply_text(tl(chat_id, "Repo shortcut deleted successfully!"))
+    msg.reply_text("Repo shortcut deleted successfully!")
     return
     
 @run_async
@@ -140,10 +149,10 @@ def listRepo(update, context):
     chat = update.effective_chat
     chat_name = chat.title or chat.first or chat.username
     repo_list = sql.get_all_repos(str(chat_id))
-    msg = tl(chat.id, "*List of repo shotcuts in {}:*\n")
-    des = tl(chat.id, "\nYou can get repo shortcuts by using `/fetch repo`, or `&repo`.\n")
+    msg = "*List of repo shotcuts in {}:*\n"
+    des = "You can get repo shortcuts by using `/fetch repo`, or `&repo`.\n"
     for repo in repo_list:
-        repo_name = (" • `&{}`\n".format(repo.name))
+        repo_name = (" • `{}`\n".format(repo.name))
         if len(msg) + len(repo_name) > MAX_MESSAGE_LENGTH:
             update.effective_message.reply_text(msg, parse_mode=ParseMode.MARKDOWN)
             msg = ""
@@ -154,7 +163,6 @@ def listRepo(update, context):
         update.effective_message.reply_text(msg.format(chat_name) + des, parse_mode=ParseMode.MARKDOWN)
         
 def getVer(update, context):
-    args = context.args
     msg = update.effective_message
     ver = api.vercheck()
     msg.reply_text("GitHub API version: "+ver)

@@ -192,6 +192,32 @@ Examples of time values: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 week.
 	`1w` = 1 week
 """,
 
+# GitHub
+"github_help": """
+*Need some GitHub release but don't want to have to go to GitHub and go to the repository? Here are some commands that can make your life easier with GitHub.*
+
+*Available commands are:*
+ - /gitr <user>/<repo>: will fetch the most recent release from that repo.
+ - /git: Returns info about a GitHub user or organization.
+ - /repo: Return the GitHub user or organization repository list (Limited at 40).
+ - /fetch <word>: get the repo shortcut registered to that word.
+ - &<word>: same as /get word
+ - /changelog <word>: gets the changelog of a saved repo shortcut
+ - /listrepo: List all repo shortcuts in the current chat
+
+*Admin only:*
+ - /saverepo <word> <user>/<repo>: Save that repo releases to the shortcut called "word".
+ - /delrepo <word>: delete the repo shortcut called "word"
+
+An example of how to save a repo shortcut would be via:
+`/saverepo ptb python-telegram-bot/python-telegram-bot`
+Now, anyone using "`/fetch ptb`", or "`&ptb`" will be answered with the releases of the given repository.
+
+*Note:* Note names are case-insensitive, and they are automatically converted to lowercase before getting saved.
+ 
+This module was only possible thanks to the [pyGitHyb_API](https://github.com/nunopenim/pyGitHyb_API)
+""",
+
 # Memes
 "memes_help": """
 Ohai, I see you'd like to know what memes I have for sale.
