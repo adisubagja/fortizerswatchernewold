@@ -18,3 +18,4 @@ hurry.filesize
 PyAML
 markdown2
 spongemock
+zalgo-text
