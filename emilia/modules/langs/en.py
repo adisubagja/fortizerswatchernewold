@@ -972,6 +972,13 @@ Keep in mind that your message <b>MUST</b> contain some text other than just a b
  - /runs: reply a random string from an array of replies.
  - /slap: slap a user, or get slapped if not a reply.
  - /info: get information about a user.
+ - /weebify: as a reply to a message, "weebifies" the message.
+ - /pat: give a headpat :3
+ - /shg or /shrug: pretty self-explanatory.
+ - /hug: give a hug and spread the love :)
+ - /react: reacts with normal reactions.
+ - /happy: reacts with happiness.
+ - /angry: reacts angrily.
  - /markdownhelp: quick summary of how markdown works in telegram - can only be called in private chats.
 """,
 

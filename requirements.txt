@@ -1,6 +1,5 @@
 future
 emoji
-regex
 requests
 sqlalchemy
 python-telegram-bot
