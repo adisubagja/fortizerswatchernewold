@@ -22,8 +22,9 @@ if is_module_loaded(FILENAME):
 
     def loggable(func):
         @wraps(func)
-        def log_action(bot: Bot, update: Update, *args, **kwargs):
-            result = func(bot, update, *args, **kwargs)
+        def log_action(update, context):
+            result = func(update, context)
+            args = context.args
             chat = update.effective_chat  # type: Optional[Chat]
             message = update.effective_message  # type: Optional[Message]
             if result:
@@ -64,7 +65,7 @@ if is_module_loaded(FILENAME):
 
     @run_async
     @user_admin
-    def logging(bot: Bot, update: Update):
+    def logging(update, context):
         spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
         if spam == True:
             return
@@ -85,7 +86,7 @@ if is_module_loaded(FILENAME):
 
     @run_async
     @user_admin
-    def setlog(bot: Bot, update: Update):
+    def setlog(update, context):
         spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
         if spam == True:
             return
@@ -127,7 +128,7 @@ if is_module_loaded(FILENAME):
 
     @run_async
     @user_admin
-    def unsetlog(bot: Bot, update: Update):
+    def unsetlog(update, context):
         spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
         if spam == True:
             return
