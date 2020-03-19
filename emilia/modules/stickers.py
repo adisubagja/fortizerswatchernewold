@@ -11,7 +11,7 @@ from telegram.ext import run_async
 from telegram.ext import CommandHandler
 from telegram.utils.helpers import escape_markdown
 
-from emilia import dispatcher
+from emilia import dispatcher, spamfilters
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.languages import tl
 
@@ -24,7 +24,7 @@ def getsticker(update, context):
         file_id = msg.reply_to_message.sticker.file_id
         newFile = bot.get_file(file_id)
         newFile.download('sticker.png')
-        bot.send_document(chat_id, document=open('sticker.png', 'rb'))
+        context.bot.send_document(chat_id, document=open('sticker.png', 'rb'))
         os.remove("sticker.png")
     else:
         update.effective_message.reply_text("Please reply to a sticker for me to upload its PNG.")
@@ -51,7 +51,7 @@ def kang(update, context):
     user = update.effective_user
     chat = update.effective_chat
     packnum = 0
-    packname = "f" + str(user.id) + "_by_" + bot.username
+    packname = "f" + str(user.id) + "_by_" + context.bot.username
     packname_found = 0
     max_stickers = 120
     while packname_found == 0:
@@ -59,7 +59,7 @@ def kang(update, context):
             stickerset = bot.get_sticker_set(packname)
             if len(stickerset.stickers) >= max_stickers:
                 packnum += 1
-                packname = "f" + str(packnum) + "_" + str(user.id) + "_by_" + bot.username
+                packname = "f" + str(packnum) + "_" + str(user.id) + "_by_" + context.bot.username
             else:
                 packname_found = 1
         except TelegramError as e:
