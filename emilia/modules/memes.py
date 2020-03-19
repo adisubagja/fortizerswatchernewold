@@ -341,7 +341,7 @@ def deepfryer(update, context):
         process_deepfry(
             image,
             message.reply_to_message,
-            bot))
+            context.bot))
     loop.close()
 
 

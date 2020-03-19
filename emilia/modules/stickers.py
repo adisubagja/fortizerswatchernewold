@@ -9,7 +9,7 @@ from telegram import TelegramError
 from telegram import Update, Bot, Chat
 from telegram.ext import run_async
 from telegram.ext import CommandHandler
-from telegram.utils.helpers import escape_markdown
+from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
 from emilia import dispatcher, spamfilters
 from emilia.modules.disable import DisableAbleCommandHandler
@@ -76,7 +76,7 @@ def kang(update, context):
             file_id = msg.reply_to_message.document.file_id
         else:
             msg.reply_text("Yea, I can't kang that.")
-        kang_file = bot.get_file(file_id)
+        kang_file = context.bot.get_file(file_id)
         kang_file.download('kangsticker.png')
         if args:
             sticker_emoji = str(args[0])
