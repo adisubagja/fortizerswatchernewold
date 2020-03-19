@@ -13,7 +13,6 @@ import pyowm
 from pyowm import timeutils, exceptions
 from googletrans import Translator
 import wikipedia
-from kbbi import KBBI
 import base64
 from bs4 import BeautifulSoup
 from emoji import UNICODE_EMOJI
