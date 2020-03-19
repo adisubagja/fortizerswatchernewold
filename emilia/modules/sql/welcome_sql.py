@@ -7,8 +7,8 @@ from sqlalchemy import Column, String, Boolean, UnicodeText, Integer, BigInteger
 from emilia.modules.helper_funcs.msg_types import Types
 from emilia.modules.sql import SESSION, BASE
 
-DEFAULT_WELCOME = "Hai {first}, bagaimana kabarmu? 🙂"
-DEFAULT_GOODBYE = "Sampai jumpa! 😉"
+DEFAULT_WELCOME = "Hey there {first}, How are you? 🙂"
+DEFAULT_GOODBYE = "Nice knowing you! 😉"
 
 
 class Welcome(BASE):
@@ -116,6 +116,13 @@ class UserRestrict(BASE):
 					and self.chat_id == other.chat_id
 					and self.user_id == other.user_id)
 
+class AllowedChat(BASE):
+    __tablename__ = "chat_whitelist"
+    chat_id = Column(String(14), primary_key=True)
+
+    def __init__(self, chat_id):
+        self.chat_id = str(chat_id)
+
 class WelcomeTimeout(BASE):
 	__tablename__ = "welcome_timeout"
 	chat_id = Column(String(14), primary_key=True)
@@ -139,6 +146,7 @@ CleanServiceSetting.__table__.create(checkfirst=True)
 WelcomeSecurity.__table__.create(checkfirst=True)
 UserRestrict.__table__.create(checkfirst=True)
 WelcomeTimeout.__table__.create(checkfirst=True)
+AllowedChat.__table__.create(checkfirst=True)
 
 INSERTION_LOCK = threading.RLock()
 WELC_BTN_LOCK = threading.RLock()
@@ -147,9 +155,12 @@ CS_LOCK = threading.RLock()
 WS_LOCK = threading.RLock()
 UR_LOCK = threading.RLock()
 TO_LOCK = threading.RLock()
+ALLOWCHATLOCK = threading.RLock()
 
 CHAT_USERRESTRICT = {}
 CHAT_TIMEOUT = {}
+
+WHITELIST = set()
 
 
 def add_to_userlist(chat_id, user_id, is_clicked):
@@ -478,6 +489,39 @@ def __load_chat_timeout():
 
 	finally:
 		SESSION.close()
+
+
+def __load_whitelisted_chats_list():  # load shit to memory to be faster, and reduce disk access
+    global WHITELIST
+    try:
+        WHITELIST = {x.chat_id for x in SESSION.query(AllowedChat).all()}
+    finally:
+        SESSION.close()
+
+
+def whitelistChat(chat_id):
+    with ALLOWCHATLOCK:
+        chat = SESSION.query(AllowedChat).get(chat_id)
+        if not chat:
+            chat = AllowedChat(chat_id)
+            SESSION.merge(chat)
+        SESSION.commit()
+        __load_whitelisted_chats_list()
+
+
+def unwhitelistChat(chat_id):
+    with ALLOWCHATLOCK:
+        chat = SESSION.query(AllowedChat).get(chat_id)
+        if chat:
+            SESSION.delete(chat)
+        SESSION.commit()
+        __load_whitelisted_chats_list()
+
+
+def isWhitelisted(chat_id):
+    return chat_id in WHITELIST
+
+__load_whitelisted_chats_list()
 
 __load_chat_userrestrict()
 __load_chat_timeout()

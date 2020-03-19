@@ -110,6 +110,15 @@ def new_member(update, context):
 	chat = update.effective_chat  # type: Optional[Chat]
 
 	should_welc, cust_welcome, cust_content, welc_type = sql.get_welc_pref(chat.id)
+	isAllowed = sql.isWhitelisted(str(chat.id))
+
+    if isAllowed or user.id in SUDO_USERS:
+        sql.whitelistChat(str(chat.id))
+    else:
+        msg.reply_text("Thanks for adding me to your group! But this group is not whitelisted to use the bot, sorry.\n\nFollow my news channel. @HitsukiNews")
+        context.bot.leave_chat(int(chat.id))
+        return
+	
 	cleanserv = sql.clean_service(chat.id)
 	if cleanserv:
 		new_members = update.effective_message.new_chat_members
@@ -988,151 +997,6 @@ def __chat_settings__(chat_id, user_id):
 		   "Untuk preferensi pesan selamat tinggal `{}`.\n" \
 		   "Bot `{}` menghapus notifikasi member masuk/keluar secara otomatis").format(welcome_pref, goodbye_pref, cleanserv)
 
-"""
-def __chat_settings_btn__(chat_id, user_id):
-	welcome_pref, _, _, _ = sql.get_welc_pref(chat_id)
-	goodbye_pref, _, _, _ = sql.get_gdbye_pref(chat_id)
-	cleanserv = sql.clean_service(chat_id)
-	if welcome_pref:
-		welc = "✅ Aktif"
-	else:
-		welc = "❎ Tidak Aktif"
-	if goodbye_pref:
-		gdby = "✅ Aktif"
-	else:
-		gdby = "❎ Tidak Aktif"
-	if cleanserv:
-		clserv = "✅ Aktif"
-	else:
-		clserv = "❎ Tidak Aktif"
-	button = []
-	button.append([InlineKeyboardButton(text="Selamat datang", callback_data="set_welc=w?|{}".format(chat_id)),
-		InlineKeyboardButton(text=welc, callback_data="set_welc=w|{}".format(chat_id))])
-	button.append([InlineKeyboardButton(text="Selamat tinggal", callback_data="set_welc=g?|{}".format(chat_id)),
-		InlineKeyboardButton(text=gdby, callback_data="set_welc=g|{}".format(chat_id))])
-	button.append([InlineKeyboardButton(text="Clean Service", callback_data="set_welc=s?|{}".format(chat_id)),
-		InlineKeyboardButton(text=clserv, callback_data="set_welc=s|{}".format(chat_id))])
-	return button
-
-def WELC_EDITBTN(update, context):
-	query = update.callback_query
-	user = update.effective_user
-	print("User {} clicked button WELC EDIT".format(user.id))
-	chat_id = query.data.split("|")[1]
-	data = query.data.split("=")[1].split("|")[0]
-	if data == "w?":
-		context.bot.answerCallbackQuery(query.id, "Bot akan mengirim pesan setiap ada member baru masuk jika di aktifkan.", show_alert=True)
-	if data == "g?":
-		context.bot.answerCallbackQuery(query.id, "Bot akan mengirim pesan setiap ada member yang keluar jika di aktifkan. Akan aktif hanya untuk grup dibawah 100 member.", show_alert=True)
-	if data == "s?":
-		context.bot.answerCallbackQuery(query.id, "Bot akan menghapus notifikasi member masuk atau member keluar secara otomatis jika di aktifkan.", show_alert=True)
-	if data == "w":
-		welcome_pref, _, _, _ = sql.get_welc_pref(chat_id)
-		goodbye_pref, _, _, _ = sql.get_gdbye_pref(chat_id)
-		cleanserv = sql.clean_service(chat_id)
-		if welcome_pref:
-			welc = "❎ Tidak Aktif"
-			sql.set_welc_preference(str(chat_id), False)
-		else:
-			welc = "✅ Aktif"
-			sql.set_welc_preference(str(chat_id), True)
-		if goodbye_pref:
-			gdby = "✅ Aktif"
-		else:
-			gdby = "❎ Tidak Aktif"
-		if cleanserv:
-			clserv = "✅ Aktif"
-		else:
-			clserv = "❎ Tidak Aktif"
-		chat = context.bot.get_chat(chat_id)
-		text = "*{}* memiliki pengaturan berikut untuk modul *Welcomes/Goodbyes*:\n\n".format(escape_markdown(chat.title))
-		text += "Obrolan ini preferensi pesan sambutannya telah diganti menjadi `{}`.\n".format(welc)
-		text += "Untuk preferensi pesan selamat tinggal `{}`.\n".format(gdby)
-		text += "Bot `{}` menghapus notifikasi member masuk/keluar secara otomatis".format(clserv)
-		button = []
-		button.append([InlineKeyboardButton(text="Selamat datang", callback_data="set_welc=w?|{}".format(chat_id)),
-			InlineKeyboardButton(text=welc, callback_data="set_welc=w|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Selamat tinggal", callback_data="set_welc=g?|{}".format(chat_id)),
-			InlineKeyboardButton(text=gdby, callback_data="set_welc=g|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Clean Service", callback_data="set_welc=s?|{}".format(chat_id)),
-			InlineKeyboardButton(text=clserv, callback_data="set_welc=s|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Kembali", callback_data="stngs_back({})".format(chat_id))])
-		query.message.edit_text(text=text,
-								  parse_mode=ParseMode.MARKDOWN,
-								  reply_markup=InlineKeyboardMarkup(button))
-		context.bot.answer_callback_query(query.id)
-	if data == "g":
-		welcome_pref, _, _, _ = sql.get_welc_pref(chat_id)
-		goodbye_pref, _, _, _ = sql.get_gdbye_pref(chat_id)
-		cleanserv = sql.clean_service(chat_id)
-		if welcome_pref:
-			welc = "✅ Aktif"
-		else:
-			welc = "❎ Tidak Aktif"
-		if goodbye_pref:
-			gdby = "❎ Tidak Aktif"
-			sql.set_gdbye_preference(str(chat_id), False)
-		else:
-			gdby = "✅ Aktif"
-			sql.set_gdbye_preference(str(chat_id), True)
-		if cleanserv:
-			clserv = "✅ Aktif"
-		else:
-			clserv = "❎ Tidak Aktif"
-		chat = context.bot.get_chat(chat_id)
-		text = "*{}* memiliki pengaturan berikut untuk modul *Welcomes/Goodbyes*:\n\n".format(escape_markdown(chat.title))
-		text += "Obrolan ini preferensi pesan selamat tinggal telah diganti menjadi `{}`.\n".format(gdby)
-		text += "Untuk preferensi pesan sambutan `{}`.\n".format(welc)
-		text += "Bot `{}` menghapus notifikasi member masuk/keluar secara otomatis".format(clserv)
-		button = []
-		button.append([InlineKeyboardButton(text="Selamat datang", callback_data="set_welc=w?|{}".format(chat_id)),
-			InlineKeyboardButton(text=welc, callback_data="set_welc=w|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Selamat tinggal", callback_data="set_welc=g?|{}".format(chat_id)),
-			InlineKeyboardButton(text=gdby, callback_data="set_welc=g|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Clean Service", callback_data="set_welc=s?|{}".format(chat_id)),
-			InlineKeyboardButton(text=clserv, callback_data="set_welc=s|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Kembali", callback_data="stngs_back({})".format(chat_id))])
-		query.message.edit_text(text=text,
-								  parse_mode=ParseMode.MARKDOWN,
-								  reply_markup=InlineKeyboardMarkup(button))
-		context.bot.answer_callback_query(query.id)
-	if data == "s":
-		welcome_pref, _, _, _ = sql.get_welc_pref(chat_id)
-		goodbye_pref, _, _, _ = sql.get_gdbye_pref(chat_id)
-		cleanserv = sql.clean_service(chat_id)
-		if welcome_pref:
-			welc = "✅ Aktif"
-		else:
-			welc = "❎ Tidak Aktif"
-		if goodbye_pref:
-			gdby = "✅ Aktif"
-		else:
-			gdby = "❎ Tidak Aktif"
-		if cleanserv:
-			clserv = "❎ Tidak Aktif"
-			sql.set_clean_service(chat_id, False)
-		else:
-			clserv = "✅ Aktif"
-			sql.set_clean_service(chat_id, True)
-		chat = context.bot.get_chat(chat_id)
-		text = "*{}* memiliki pengaturan berikut untuk modul *Welcomes/Goodbyes*:\n\n".format(escape_markdown(chat.title))
-		text += "Pengaturan clean service telah di ubah. Bot `{}` menghapus notifikasi member masuk/keluar.\n".format(clserv)
-		text += "Untuk preferensi pesan sambutan `{}`.\n".format(welc)
-		text += "Untuk preferensi pesan selamat tinggal `{}`.".format(gdby)
-		button = []
-		button.append([InlineKeyboardButton(text="Selamat datang", callback_data="set_welc=w?|{}".format(chat_id)),
-			InlineKeyboardButton(text=welc, callback_data="set_welc=w|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Selamat tinggal", callback_data="set_welc=g?|{}".format(chat_id)),
-			InlineKeyboardButton(text=gdby, callback_data="set_welc=g|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Clean Service", callback_data="set_welc=s?|{}".format(chat_id)),
-			InlineKeyboardButton(text=clserv, callback_data="set_welc=s|{}".format(chat_id))])
-		button.append([InlineKeyboardButton(text="Kembali", callback_data="stngs_back({})".format(chat_id))])
-		query.message.edit_text(text=text,
-								  parse_mode=ParseMode.MARKDOWN,
-								  reply_markup=InlineKeyboardMarkup(button))
-		context.bot.answer_callback_query(query.id)
-"""
-
 
 CAS_URL = "https://combot.org/api/cas/check"
 SPAMWATCH_URL = "https://api.spamwat.ch/banlist/"
@@ -1185,6 +1049,52 @@ def check_sw(bot: Bot, user_id, user, message):
 		context.bot.sendMessage(-1001338861977, text, parse_mode="markdown", disable_web_page_preview=True)
 		print(">>> NEW FBAN SW: {} {} in {}".format(user.first_name, user_id, message.chat.title))
 
+
+@run_async
+def whChat(update, context):
+    args = context.args
+    if args and len(args) == 1:
+        chat_id = str(args[0])
+        del args[0]
+        try:
+            banner = update.effective_user
+            context.bot.send_message(MESSAGE_DUMP,
+                     "<b>Chat WhiteList</b>" \
+                     "\n#WHCHAT" \
+                     "\n<b>Status:</b> <code>Whitelisted</code>" \
+                     "\n<b>Sudo Admin:</b> {}" \
+                     "\n<b>Chat Name:</b> {}" \
+                     "\n<b>ID:</b> <code>{}</code>".format(mention_html(banner.id, banner.first_name),userssql.get_chat_name(chat_id),chat_id), parse_mode=ParseMode.HTML)
+            sql.whitelistChat(chat_id)
+            update.effective_message.reply_text("Chat has been successfully whitelisted!")
+        except:
+            update.effective_message.reply_text("Error whitelisting chat!")
+    else:
+        update.effective_message.reply_text("Give me a valid chat id!")
+
+
+@run_async
+def unwhChat(update, context):
+    args = context.args
+    if args and len(args) == 1:
+        chat_id = str(args[0])
+        del args[0]
+        try:
+            banner = update.effective_user
+            context.bot.send_message(MESSAGE_DUMP,
+                     "<b>Regression of Chat WhiteList</b>" \
+                     "\n#UNWHCHAT" \
+                     "\n<b>Status:</b> <code>Un-Whitelisted</code>" \
+                     "\n<b>Sudo Admin:</b> {}" \
+                     "\n<b>Chat Name:</b> {}" \
+                     "\n<b>ID:</b> <code>{}</code>".format(mention_html(banner.id, banner.first_name),userssql.get_chat_name(chat_id),chat_id), parse_mode=ParseMode.HTML)
+            sql.unwhitelistChat(chat_id)
+            update.effective_message.reply_text("Chat has been successfully un-whitelisted!")
+            context.bot.leave_chat(int(chat_id))
+        except:
+            update.effective_message.reply_text("Error un-whitelisting chat!")
+    else:
+        update.effective_message.reply_text("Give me a valid chat id!")
 
 
 __help__ = "welcome_help"

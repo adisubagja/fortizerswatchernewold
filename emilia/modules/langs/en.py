@@ -198,15 +198,17 @@ Examples of time values: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 week.
 
 *Available commands are:*
  - /gitr <user>/<repo>: will fetch the most recent release from that repo.
+ - /gitr <user>/<repo> <number>: will fetch releases in past.
  - /git: Returns info about a GitHub user or organization.
  - /repo: Return the GitHub user or organization repository list (Limited at 40).
  - /fetch <word>: get the repo shortcut registered to that word.
  - &<word>: same as /get word
  - /changelog <word>: gets the changelog of a saved repo shortcut
  - /listrepo: List all repo shortcuts in the current chat
+ - /gitver: returns the current API version.
 
 *Admin only:*
- - /saverepo <word> <user>/<repo>: Save that repo releases to the shortcut called "word".
+ - /saverepo <name> <user>/<repo> <number (optional)>: saves a repo value as shortcut
  - /delrepo <word>: delete the repo shortcut called "word"
 
 An example of how to save a repo shortcut would be via:
@@ -229,7 +231,6 @@ Well, here you go.
  - /vapor: Turns a message into vaporwave text.
  - /mock: Mocks a replied message lick the spongebob meme.
  - /zalgofy: corrupts a message.
- - /deepfry: for when your images/stickers need to get a little fried.
  - /shout <keyword>: Write anything you want to give loud shout
  - /dllm: Some chinese memes
  - /thonkify <reply>/<args>: turns text into thonk text (only supports letters and none symbols for now).
