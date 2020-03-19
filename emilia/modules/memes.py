@@ -23,8 +23,6 @@ from telegram.error import BadRequest
 from telegram.ext import CommandHandler, run_async
 from zalgo_text import zalgo
 
-from deeppyer import deepfry
-from emilia import DEEPFRY_TOKEN
 from emilia import dispatcher, spamfilters
 from emilia.modules.languages import tl
 
@@ -308,66 +306,7 @@ def chinesememes(update, context):
         print(e)
 
 
-@run_async
-def deepfryer(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-    message = update.effective_message
-    if message.reply_to_message:
-        data = message.reply_to_message.photo
-        data2 = message.reply_to_message.sticker
-    else:
-        data = []
-        data2 = []
-
-    # check if message does contain media and cancel when not
-    if not data and not data2:
-        message.reply_text("What am I supposed to do with this?!")
-        return
-
-    # download last photo (highres) as byte array
-    if data:
-        photodata = data[len(data) - 1].get_file().download_as_bytearray()
-        image = Image.open(io.BytesIO(photodata))
-    elif data2:
-        sticker = context.bot.get_file(data2.file_id)
-        sticker.download('sticker.png')
-        image = Image.open("sticker.png")
-
-    # the following needs to be executed async (because dumb lib)
-    loop = asyncio.new_event_loop()
-    loop.run_until_complete(
-        process_deepfry(
-            image,
-            context,
-            message.reply_to_message,
-            context.bot))
-    loop.close()
-
-
-async def process_deepfry(update, context, image: Image, reply: Message):
-    # DEEPFRY IT
-    image = await deepfry(
-        img=image,
-        token=DEEPFRY_TOKEN,
-        url_base='westeurope'
-    )
-
-    bio = BytesIO()
-    bio.name = 'image.jpeg'
-    image.save(bio, 'JPEG')
-
-    # send it back
-    bio.seek(0)
-    reply.reply_photo(bio)
-    if Path("sticker.png").is_file():
-        os.remove("sticker.png")
-
-
 # shitty maymay modules made by @divadsn ^^^
-
-
 @run_async
 def shout(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
@@ -406,7 +345,6 @@ FORBES_HANDLER = CommandHandler("forbes", forbesify)
 STRETCH_HANDLER = CommandHandler("stretch", stretch)
 VAPOR_HANDLER = CommandHandler("vapor", vapor, pass_args=True)
 ZALGO_HANDLER = CommandHandler("zalgofy", zalgotext)
-DEEPFRY_HANDLER = CommandHandler("deepfry", deepfryer)
 SHOUT_HANDLER = CommandHandler("shout", shout, pass_args=True)
 CHINESEMEMES_HANDLER = CommandHandler("dllm", chinesememes, pass_args=True)
 
@@ -415,7 +353,6 @@ dispatcher.add_handler(OWO_HANDLER)
 dispatcher.add_handler(STRETCH_HANDLER)
 dispatcher.add_handler(VAPOR_HANDLER)
 dispatcher.add_handler(ZALGO_HANDLER)
-dispatcher.add_handler(DEEPFRY_HANDLER)
 dispatcher.add_handler(COPYPASTA_HANDLER)
 dispatcher.add_handler(CLAPMOJI_HANDLER)
 dispatcher.add_handler(BMOJI_HANDLER)
