@@ -12,3 +12,8 @@ kbbi
 Pillow
 alphabet_detector
 urbandict
+bs4
+lxml
+hurry.filesize
+PyAML
+markdown2
