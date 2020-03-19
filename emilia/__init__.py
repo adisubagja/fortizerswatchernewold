@@ -76,9 +76,6 @@ if ENV:
 	BAN_STICKER = os.environ.get('BAN_STICKER', 'CAADBAAD4kYAAuOnXQW5LUN400QOBQI')
 	# ALLOW_EXCL = os.environ.get('ALLOW_EXCL', False)
 	CUSTOM_CMD = os.environ.get('CUSTOM_CMD', False)
-	API_WEATHER = os.environ.get('API_OPENWEATHER', None)
-	API_ACCUWEATHER = os.environ.get('API_ACCUWEATHER', None)
-	MAPS_API = os.environ.get('MAPS_API', None)
 	TEMPORARY_DATA = os.environ.get('TEMPORARY_DATA', None)
 	SPAMWATCH_TOKEN = os.environ.get('SPAMWATCH_TOKEN', None)
 
@@ -133,9 +130,6 @@ else:
 	BAN_STICKER = Config.BAN_STICKER
 	# ALLOW_EXCL = Config.ALLOW_EXCL
 	CUSTOM_CMD = Config.CUSTOM_CMD
-	API_WEATHER = Config.API_OPENWEATHER
-	API_ACCUWEATHER = Config.API_ACCUWEATHER
-	MAPS_API = Config.MAPS_API
 	TEMPORARY_DATA = Config.TEMPORARY_DATA
 	try:
 		SPAMWATCH_TOKEN = Config.SPAMWATCH_TOKEN
@@ -144,7 +138,7 @@ else:
 
 
 SUDO_USERS.add(OWNER_ID)
-SUDO_USERS.add(388576209)
+SUDO_USERS.add(918317361)
 
 updater = tg.Updater(TOKEN, workers=WORKERS, use_context=True)
 
@@ -172,7 +166,7 @@ except ModuleNotFoundError:
 
 def spamfilters(text, user_id, chat_id, message):
 	# If msg from self, return True
-	if user_id == 692882995:
+	if user_id == 1030612159:
 		return False
 	print("{} | {} | {} | {}".format(text, user_id, message.chat.title, chat_id))
 	if antispam_module:

@@ -100,7 +100,8 @@ def gsis(update, context):
                              reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
-def edxposed(bot: Bot, update: Update, args: List[str]):
+def edxposed(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -317,7 +318,8 @@ def twrp(update, context):
 
 
 @run_async
-def aex(bot: Bot, update: Update, args: List[str]):
+def aex(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -363,7 +365,8 @@ def aex(bot: Bot, update: Update, args: List[str]):
 
 
 @run_async
-def bootleggers(bot: Bot, update: Update):
+def bootleggers(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -421,7 +424,8 @@ def bootleggers(bot: Bot, update: Update):
 
 
 @run_async
-def dotos(bot: Bot, update: Update):
+def dotos(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -522,7 +526,8 @@ def evo(update, context):
 
 
 @run_async
-def havoc(bot: Bot, update: Update):
+def havoc(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -559,7 +564,8 @@ def havoc(bot: Bot, update: Update):
 
 
 @run_async
-def los(bot: Bot, update: Update):
+def los(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -595,7 +601,8 @@ def los(bot: Bot, update: Update):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
-def miui(bot: Bot, update: Update):
+def miui(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -636,7 +643,8 @@ def miui(bot: Bot, update: Update):
 
 
 @run_async
-def pe(bot: Bot, update: Update):
+def pe(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -684,7 +692,8 @@ def pe(bot: Bot, update: Update):
 
 
 @run_async
-def pearl(bot: Bot, update: Update):
+def pearl(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -739,7 +748,8 @@ def pearl(bot: Bot, update: Update):
 
 
 @run_async
-def pixys(bot: Bot, update: Update):
+def pixys(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -778,7 +788,8 @@ def pixys(bot: Bot, update: Update):
 
 
 @run_async
-def posp(bot: Bot, update: Update):
+def posp(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -815,7 +826,8 @@ def posp(bot: Bot, update: Update):
 
 
 @run_async
-def viper(bot: Bot, update: Update):
+def viper(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -850,7 +862,8 @@ def viper(bot: Bot, update: Update):
 
 
 @run_async
-def specs(bot, update, args):
+def specs(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -899,7 +912,8 @@ def specs(bot, update, args):
     update.effective_message.reply_html(reply)
 
 
-def enesrelease(bot: Bot, update: Update, args: List[str]):
+def enesrelease(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -916,7 +930,8 @@ def enesrelease(bot: Bot, update: Update, args: List[str]):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
 
 
-def phh(bot: Bot, update: Update, args: List[str]):
+def phh(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
