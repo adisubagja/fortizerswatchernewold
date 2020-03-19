@@ -32,7 +32,8 @@ DEVICES_DATA = 'https://raw.githubusercontent.com/androidtrackers/certified-andr
 
 
 @run_async
-def device(bot, update, args):
+def device(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -66,7 +67,8 @@ def device(bot, update, args):
 
 
 @run_async
-def odin(bot, update, args):
+def odin(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -82,7 +84,8 @@ def odin(bot, update, args):
 
 
 @run_async
-def gsis(bot, update, args):
+def gsis(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -116,7 +119,8 @@ def edxposed(bot: Bot, update: Update, args: List[str]):
     message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode=ParseMode.MARKDOWN)
 
 @run_async
-def mitools(bot, update, args):
+def mitools(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -141,7 +145,8 @@ def mitools(bot, update, args):
 
 
 @run_async
-def getfw(bot, update, args):
+def getfw(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -186,7 +191,8 @@ def getfw(bot, update, args):
 
 
 @run_async
-def checkfw(bot, update, args):
+def checkfw(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -237,7 +243,8 @@ def checkfw(bot, update, args):
 
 
 @run_async
-def magisk(bot, update):
+def magisk(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -256,7 +263,8 @@ def magisk(bot, update):
 
 
 @run_async
-def twrp(bot, update, args):
+def twrp(update, context):
+    args = context.args
     if len(args) == 0:
         reply='No codename provided, write a codename for fetching informations.'
         del_msg = update.effective_message.reply_text("{}".format(reply),
@@ -452,7 +460,8 @@ def dotos(bot: Bot, update: Update):
 
 
 @run_async
-def evo(bot: Bot, update: Update):
+def evo(update, context):
+    args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
