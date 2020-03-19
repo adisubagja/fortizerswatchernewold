@@ -1,6 +1,8 @@
 import html
 import json
 import random
+import urllib.request
+import urllib.parse
 from datetime import datetime
 from typing import Optional, List
 import time
@@ -273,7 +275,7 @@ normiefont = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q
 weebyfont = ['卂','乃','匚','刀','乇','下','厶','卄','工','丁','长','乚','从','𠘨','口','尸','㔿','尺','丂','丅','凵','リ','山','乂','丫','乙']
 
 
-run_async
+@run_async
 def shrug(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
@@ -292,7 +294,7 @@ def hug(update, context):
 
 
 @run_async
-def runs(bot: Bot, update: Update):
+def runs(update, context):
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
     if spam == True:
         return
@@ -317,7 +319,7 @@ def slap(update, context):
         curr_user = "[{}](tg://user?id={})".format(msg.from_user.first_name, msg.from_user.id)
 
     user_id = extract_user(update.effective_message, args)
-    if user_id == bot.id or user_id == 777000:
+    if user_id == context.bot.id or user_id == 777000:
         user1 = "[{}](tg://user?id={})".format(bot.first_name, bot.id)
         user2 = curr_user
     elif user_id:
