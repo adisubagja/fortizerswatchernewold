@@ -320,7 +320,7 @@ def slap(update, context):
 
     user_id = extract_user(update.effective_message, args)
     if user_id == context.bot.id or user_id == 777000:
-        user1 = "[{}](tg://user?id={})".format(bot.first_name, bot.id)
+        user1 = "[{}](tg://user?id={})".format(context.bot.first_name, context.bot.id)
         user2 = curr_user
     elif user_id:
         slapped_user = context.bot.get_chat(user_id)

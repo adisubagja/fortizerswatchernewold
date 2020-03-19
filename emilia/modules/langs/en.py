@@ -192,6 +192,39 @@ Examples of time values: 4m = 4 minutes, 3h = 3 hours, 6d = 6 days, 5w = 5 week.
 	`1w` = 1 week
 """,
 
+# Memes
+"memes_help": """
+Ohai, I see you'd like to know what memes I have for sale.
+Well, here you go.
+
+*Some memes command:*
+ - /owo: OwO whats this? OwOfies a message.
+ - /stretch: Stretches vowels in a message a random number of times.
+ - /vapor: Turns a message into vaporwave text.
+ - /mock: Mocks a replied message lick the spongebob meme.
+ - /zalgofy: corrupts a message.
+ - /deepfry: for when your images/stickers need to get a little fried.
+ - /shout <keyword>: Write anything you want to give loud shout
+ - /dllm: Some chinese memes
+ - /thonkify <reply>/<args>: turns text into thonk text (only supports letters and none symbols for now).
+ - /forbes <reply>: turns a message into a Forbes headline.
+ - /bify <reply>: Replying to a message with replace a random character with the B emoji.
+ - /clap <reply>: Adds clap emojis at the begining, end, and in every space in a message.
+ - /cp <reply>: A replica of mattatas copypasta command.
+""",
+
+# AFK
+	"{} sekarang AFK!": "{} is now AFK!",
+	"{} sudah tidak AFK!": "{} is no longer AFK!",
+	"{} sedang AFK!": "{} is AFK!",
+	"{} sedang AFK!\nKarena : {}": "{} is AFK! says its because of: {}",
+	"afk_help": """
+ - /afk <reason>: mark yourself as AFK.
+ - brb <reason>: same as the afk command - but not a command.
+
+When marked as AFK, any mentions will be replied to with a message to say you're not available!
+""",
+
 # Backups
 	"Coba unduh dan unggah ulang file seperti Anda sendiri sebelum mengimpor - yang ini sepertinya rusak!": "Try downloading and reuploading the file as yourself before importing - this one seems to be iffy!",
 	"File cadangan tidak valid!": "Invalid backup file!",

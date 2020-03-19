@@ -65,6 +65,7 @@ if ENV:
 	URL = os.environ.get('URL', "")  # Does not contain token
 	PORT = int(os.environ.get('PORT', 5000))
 	CERT_PATH = os.environ.get("CERT_PATH")
+	DEEPFRY_TOKEN = os.environ.get('DEEPFRY_TOKEN', "")
 
 	DB_URI = os.environ.get('DATABASE_URL')
 	DONATION_LINK = os.environ.get('DONATION_LINK')
@@ -119,6 +120,7 @@ else:
 	URL = Config.URL
 	PORT = Config.PORT
 	CERT_PATH = Config.CERT_PATH
+	DEEPFRY_TOKEN = Config.DEEPFRY_TOKEN
 
 	DB_URI = Config.SQLALCHEMY_DATABASE_URI
 	DONATION_LINK = Config.DONATION_LINK
