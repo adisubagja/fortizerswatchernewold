@@ -5,7 +5,7 @@ import telegram
 from telegram import Update, Bot
 from telegram.ext import run_async, MessageHandler, Filters
  
-from emilia import dispatcher, OWNER_ID, SUDO_USERS, spamfilters
+from emilia import dispatcher, OWNER_ID, SUDO_USERS
 from emilia import dispatcher, LOGGER
  
  
@@ -52,9 +52,6 @@ def separate_sed(sed_string):
  
 @run_async
 def sed(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
     sed_result = separate_sed(update.effective_message.text)
     if sed_result and update.effective_message.reply_to_message:
         if update.effective_message.reply_to_message.text:
