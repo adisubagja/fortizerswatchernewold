@@ -32,7 +32,9 @@ PM_START_TEXT = "start_text"
 
 HELP_STRINGS = "help_text"#.format(dispatcher.bot.first_name, "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n")
 
-DONATE_STRING = "donate_text"
+SOURCE_STRING = """
+I'm built in python3, using the python-telegram-bot library, and am fully opensource - you can find what makes me tick [here](https://github.com/HitaloSama/Hitsuki)
+"""
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -147,10 +149,9 @@ def start(update, context):
         else:
             first_name = update.effective_user.first_name
             buttons = InlineKeyboardMarkup(
-                [[InlineKeyboardButton(text="🎉 Add me to your group", url="https://t.me/{}?startgroup=new".format(context.bot.username))],
-                [InlineKeyboardButton(text="💭 Language", callback_data="main_setlang"), InlineKeyboardButton(text="⚙️ Connect Group", callback_data="main_connect")],
-                [InlineKeyboardButton(text="👥 Support Group", url="https://t.me/EmiliaOfficial"), InlineKeyboardButton(text="🔔 Update Channel", url="https://t.me/AyraBotNews")],
-                [InlineKeyboardButton(text="❓ Help", url="https://t.me/{}?start=help".format(context.bot.username)), InlineKeyboardButton(text="💖 Donate", url="http://ayrahikari.github.io/donations.html")]])
+                [[InlineKeyboardButton(text="📃 HitaloSama's Docs", url="https://telegra.ph/HitaloKun-doc-07-15")],
+                [InlineKeyboardButton(text="⚙️ Connections", callback_data="main_connect")],
+                [InlineKeyboardButton(text="🇺🇸 Language", callback_data="main_setlang"), InlineKeyboardButton(text="❓ Help", url="https://t.me/LordHitsuki_BOT?start=help")]])
             update.effective_message.reply_text(
                 tl(update.effective_message, PM_START_TEXT).format(escape_markdown(first_name), escape_markdown(context.bot.first_name), OWNER_ID),
                 disable_web_page_preview=True,
@@ -441,29 +442,20 @@ def get_settings(update, context):
 
 
 @run_async
-def donate(update, context):
+def source(bot: Bot, update: Update):
     user = update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
 
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-
     if chat.type == "private":
-        update.effective_message.reply_text(tl(update.effective_message, DONATE_STRING), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
-
-        if OWNER_ID != 388576209 and DONATION_LINK:
-            update.effective_message.reply_text(tl(update.effective_message, "Anda juga dapat menyumbang kepada orang yang saat ini menjalankan saya "
-                                                "[disini]({})").format(DONATION_LINK),
-                                                parse_mode=ParseMode.MARKDOWN)
+        update.effective_message.reply_text(SOURCE_STRING, parse_mode=ParseMode.MARKDOWN)
 
     else:
         try:
-            context.bot.send_message(user.id, tl(update.effective_message, DONATE_STRING), parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
+            bot.send_message(user.id, SOURCE_STRING, parse_mode=ParseMode.MARKDOWN)
 
-            update.effective_message.reply_text(tl(update.effective_message, "Saya sudah PM Anda tentang donasi untuk pencipta saya!"))
+            update.effective_message.reply_text("You'll find in PM more info about my sourcecode.")
         except Unauthorized:
-            update.effective_message.reply_text(tl(update.effective_message, "Hubungi saya di PM dulu untuk mendapatkan informasi donasi."))
+            update.effective_message.reply_text("Contact me in PM first to get source information.")
 
 
 
@@ -511,7 +503,7 @@ def main():
     settings_handler = CommandHandler("settings", get_settings)
     settings_callback_handler = CallbackQueryHandler(settings_button, pattern=r"stngs_")
 
-    donate_handler = CommandHandler("donate", donate)
+    source_handler = CommandHandler("source", source)
     M_CONNECT_BTN_HANDLER = CallbackQueryHandler(m_connect_button, pattern=r"main_connect")
     M_SETLANG_BTN_HANDLER = CallbackQueryHandler(m_change_langs, pattern=r"main_setlang")
 
@@ -521,7 +513,7 @@ def main():
     dispatcher.add_handler(settings_handler)
     dispatcher.add_handler(help_callback_handler)
     dispatcher.add_handler(settings_callback_handler)
-    dispatcher.add_handler(donate_handler)
+    dispatcher.add_handler(source_handler)
     dispatcher.add_handler(M_CONNECT_BTN_HANDLER)
     dispatcher.add_handler(M_SETLANG_BTN_HANDLER)
 
