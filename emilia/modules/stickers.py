@@ -11,13 +11,14 @@ from telegram.ext import run_async
 from telegram.ext import CommandHandler
 from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
-from emilia import dispatcher, spamfilters
+from emilia import dispatcher, spamcheck
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.languages import tl
 from emilia.modules.helper_funcs.alternate import send_message
 
 
 @run_async
+@spamcheck
 def getsticker(update, context):
     msg = update.effective_message
     chat_id = update.effective_chat.id
@@ -32,10 +33,8 @@ def getsticker(update, context):
 
 
 @run_async
+@spamcheck
 def stickerid(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
 	msg = update.effective_message
 	if msg.reply_to_message and msg.reply_to_message.sticker:
 		send_message(update.effective_message, tl(update.effective_message, "Hai {}, Id stiker yang anda balas adalah :\n```{}```").format(mention_markdown(msg.from_user.id, msg.from_user.first_name), msg.reply_to_message.sticker.file_id),
@@ -46,6 +45,7 @@ def stickerid(update, context):
 
 
 @run_async
+@spamcheck
 def kang(update, context):
     args = context.args
     msg = update.effective_message

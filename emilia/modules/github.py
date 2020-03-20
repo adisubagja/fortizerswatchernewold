@@ -8,7 +8,7 @@ from requests import get
 import emilia.modules.helper_funcs.git_api as api
 import emilia.modules.sql.github_sql as sql
 
-from emilia import dispatcher, OWNER_ID, LOGGER, SUDO_USERS, SUPPORT_USERS, spamfilters
+from emilia import dispatcher, OWNER_ID, LOGGER, SUDO_USERS, SUPPORT_USERS, spamcheck
 from emilia.modules.helper_funcs.filters import CustomFilters
 from emilia.modules.helper_funcs.chat_status import user_admin
 from emilia.modules.languages import tl
@@ -53,11 +53,9 @@ def getRepo(update, context, reponame):
     return None
 
 @run_async
+@spamcheck
 def getRelease(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     msg = update.effective_message
     if(len(args) != 1 and not (len(args) == 2 and args[1].isdigit())):
         msg.reply_text("Please specify a valid combination of <user>/<repo>")
@@ -71,6 +69,7 @@ def getRelease(update, context):
     return
 
 @run_async
+@spamcheck
 def hashFetch(update, context):
     args = context.args
     message = update.effective_message.text
@@ -83,6 +82,7 @@ def hashFetch(update, context):
     return
     
 @run_async
+@spamcheck
 def cmdFetch(update, context):
     args = context.args
     msg = update.effective_message
@@ -96,6 +96,7 @@ def cmdFetch(update, context):
 
 
 @run_async
+@spamcheck
 def changelog(update, context):
     args = context.args
     msg = update.effective_message
@@ -115,6 +116,7 @@ def changelog(update, context):
 
 @run_async
 @user_admin
+@spamcheck
 def saveRepo(update, context):
     args = context.args
     chat_id = update.effective_chat.id
@@ -131,6 +133,7 @@ def saveRepo(update, context):
     
 @run_async
 @user_admin
+@spamcheck
 def delRepo(update, context):
     args = context.args
     chat_id = update.effective_chat.id
@@ -143,6 +146,7 @@ def delRepo(update, context):
     return
     
 @run_async
+@spamcheck
 def listRepo(update, context):
     args = context.args
     chat_id = update.effective_chat.id
@@ -169,6 +173,7 @@ def getVer(update, context):
     return
 
 @run_async
+@spamcheck
 def github(update, context):
     args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
@@ -214,6 +219,7 @@ def github(update, context):
 
 
 @run_async
+@spamcheck
 def repo(update, context):
     args = context.args
     spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)

@@ -5,15 +5,13 @@ from io import BytesIO
 from PIL import Image
 from telegram import Message, Update, Bot, User
 from telegram.ext import run_async, CommandHandler
-from emilia import dispatcher, spamfilters
+from emilia import dispatcher, spamcheck
 from emilia.modules.languages import tl
 
 
+@spamcheck
 @run_async
 def thonkify(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
 
     from emilia.modules.thonkify_dict import thonkifydict

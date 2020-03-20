@@ -15,7 +15,7 @@ from telegram import ParseMode
 from telegram.ext import CommandHandler, run_async, Filters
 from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
-from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, spamfilters
+from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, spamcheck
 from emilia.__main__ import STATS, USER_INFO
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.helper_funcs.extraction import extract_user
@@ -275,20 +275,16 @@ normiefont = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q
 weebyfont = ['卂','乃','匚','刀','乇','下','厶','卄','工','丁','长','乚','从','𠘨','口','尸','㔿','尺','丂','丅','凵','リ','山','乂','丫','乙']
 
 
+@spamcheck
 @run_async
 def shrug(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     reply_text = update.effective_message.reply_to_message.reply_text if update.effective_message.reply_to_message else update.effective_message.reply_text
     reply_text = reply_text(random.choice(SHRUGS))
- 
- 
+
+
+@spamcheck
 @run_async
 def hug(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     reply_text = update.effective_message.reply_to_message.reply_text if update.effective_message.reply_to_message else update.effective_message.reply_text
     reply_text = reply_text(random.choice(HUGS))
 
@@ -344,10 +340,8 @@ def slap(update, context):
 
 
 @run_async
+@spamcheck
 def weebify(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     msg = update.effective_message
     if args:
@@ -373,10 +367,8 @@ BASE_URL = 'https://del.dog'
 
 
 @run_async
+@spamcheck
 def paste(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     message = update.effective_message
 
@@ -409,10 +401,8 @@ def paste(update, context):
 
 
 @run_async
+@spamcheck
 def get_paste_content(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     message = update.effective_message
 
@@ -447,10 +437,8 @@ def get_paste_content(update, context):
 
 
 @run_async
+@spamcheck
 def get_paste_stats(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     message = update.effective_message
 
@@ -489,10 +477,8 @@ def get_paste_stats(update, context):
 
 
 @run_async
+@spamcheck
 def pat(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     chat_id = update.effective_chat.id
     msg = str(update.message.text)

@@ -14,7 +14,7 @@ from telegram import Update, Bot
 from telegram.ext import CommandHandler
 from telegram.ext import run_async
 
-from emilia import dispatcher, LOGGER, spamfilters
+from emilia import dispatcher, LOGGER, spamcheck
 from emilia.modules.helper_funcs.misc import split_message
 
 # DO NOT DELETE THIS, PLEASE.
@@ -31,12 +31,10 @@ GITHUB = 'https://github.com'
 DEVICES_DATA = 'https://raw.githubusercontent.com/androidtrackers/certified-android-devices/master/by_device.json'
 
 
+@spamcheck
 @run_async
 def device(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     if len(args) == 0:
         reply = f'No codename provided, write a codename for fetching informations.'
         update.effective_message.reply_text("{}".format(reply),
@@ -66,12 +64,10 @@ def device(update, context):
                               parse_mode=ParseMode.HTML, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def odin(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = "*Tool to flash the stock firmware of your Samsung Galaxy*\nDownload from below!\n\nYou can download a firmware by the `/getfw` command or on the @SamFirm channel"
     keyboard = [
         [InlineKeyboardButton("Odin", url="https://odin3download.com/tool/Odin3-v3.14.1.zip"),
@@ -83,12 +79,10 @@ def odin(update, context):
                              reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN)
 
 
+@spamcheck
 @run_async
 def gsis(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = "*Channels recommended by my creator for you to download GSIs:*\n\n - @VegaGSIs\n - [@Expressluke](http://t.me/joinchat/AAAAAEjIRhZRX1mOZpLR5g)\n - @ErfanGSI\n - @canalvegadata"
     keyboard = [
         [InlineKeyboardButton("What is GSI?", url="https://github.com/phhusson/treble_experimentations/wiki/Home"),
@@ -100,11 +94,10 @@ def gsis(update, context):
                              reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
+@run_async
 def edxposed(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     usr = get(f'https://api.github.com/repos/elderdrivers/edxposed/releases/latest').json()
     reply_text = "*Latest EdXposed release(s):*\n"
@@ -119,12 +112,11 @@ def edxposed(update, context):
             continue
     message.reply_text(reply_text, reply_markup=InlineKeyboardMarkup(keyboard), parse_mode=ParseMode.MARKDOWN)
 
+
+@spamcheck
 @run_async
 def mitools(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     url = f'{WIKI}/Tools_for_Xiaomi_devices.html'
     message = "Useful tools for Xiaomi devices"
     keyboard = [
@@ -145,12 +137,10 @@ def mitools(update, context):
                              reply_markup=reply_markup, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def getfw(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     if not len(args) == 2:
         reply = f'Give me something to fetch, like: <code>/getfw SM-N975F DBT</code>'
         update.effective_message.reply_text("{}".format(reply),
@@ -191,12 +181,10 @@ def getfw(update, context):
                            parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def checkfw(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     if not len(args) == 2:
         reply = f'Give me something to fetch, like:\n`/checkfw SM-N975F DBT`'
         update.effective_message.reply_text("{}".format(reply),
@@ -243,12 +231,10 @@ def checkfw(update, context):
                            parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def magisk(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     url = 'https://raw.githubusercontent.com/topjohnwu/magisk_files/'
     releases = ""
     for type, branch in {"Stable":["master/stable","master"], "Beta":["master/beta","master"], "Canary (release)":["canary/release","canary"], "Canary (debug)":["canary/debug","canary"]}.items():
@@ -263,6 +249,7 @@ def magisk(update, context):
                               parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def twrp(update, context):
     args = context.args
@@ -317,12 +304,10 @@ def twrp(update, context):
                                parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def aex(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     AEX_OTA_API = "https://api.aospextended.com/ota/"
     message = update.effective_message
 
@@ -364,12 +349,10 @@ def aex(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def bootleggers(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     codename = message.text[len('/bootleggers '):]
 
@@ -423,12 +406,10 @@ def bootleggers(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def dotos(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/dotos '):]
 
@@ -463,12 +444,10 @@ def dotos(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def evo(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/evo '):]
 
@@ -525,12 +504,10 @@ def evo(update, context):
         return
 
 
+@spamcheck
 @run_async
 def havoc(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/havoc '):]
     fetch = get(f'https://raw.githubusercontent.com/Havoc-Devices/android_vendor_OTA/pie/{device}.json')
@@ -563,6 +540,7 @@ def havoc(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def los(update, context):
     args = context.args
@@ -601,11 +579,10 @@ def los(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
+@run_async
 def miui(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     giturl = "https://raw.githubusercontent.com/XiaomiFirmwareUpdater/miui-updates-tracker/master/"
     message = update.effective_message
     device = message.text[len('/miui '):]
@@ -642,12 +619,10 @@ def miui(update, context):
     message.reply_html(result)
 
 
+@spamcheck
 @run_async
 def pe(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     cmd = message.text.split()[0]
     device = message.text[len(cmd)+1:]
@@ -691,12 +666,10 @@ def pe(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def pearl(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/pearl '):]
 
@@ -747,12 +720,10 @@ def pearl(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def pixys(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/pixys '):]
 
@@ -787,12 +758,10 @@ def pixys(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def posp(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/posp '):]
 
@@ -825,12 +794,10 @@ def posp(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN, disable_web_page_preview=True)
 
 
+@spamcheck
 @run_async
 def viper(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     device = message.text[len('/viper '):]
 
@@ -861,12 +828,10 @@ def viper(update, context):
         message.reply_text("Device not found")
 
 
+@spamcheck
 @run_async
 def specs(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     if len(args) == 0:
         update.effective_message.reply_html("Please type your device <b>brand</b> and <b>name</b>!\
         \nFor example, <code>/specs Xiaomi Redmi Note 7</code>")
@@ -912,11 +877,10 @@ def specs(update, context):
     update.effective_message.reply_html(reply)
 
 
+@spamcheck
+@run_async
 def enesrelease(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     usr = get(f'https://api.github.com/repos/EnesSastim/Downloads/releases/latest').json()
     reply_text = "*Enes Sastim's lastest releases(s):*\n"
@@ -930,11 +894,10 @@ def enesrelease(update, context):
     message.reply_text(reply_text, parse_mode=ParseMode.MARKDOWN)
 
 
+@spamcheck
+@run_async
 def phh(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     usr = get(f'https://api.github.com/repos/phhusson/treble_experimentations/releases/latest').json()
     reply_text = "*Phh's lastest release(s):*\n"

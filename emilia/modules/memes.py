@@ -23,7 +23,7 @@ from telegram.error import BadRequest
 from telegram.ext import CommandHandler, run_async
 from zalgo_text import zalgo
 
-from emilia import dispatcher, spamfilters
+from emilia import dispatcher, spamcheck
 from emilia.modules.languages import tl
 
 MAXNUMURL = 'https://raw.githubusercontent.com/atanet90/expression-pack/master/meta'
@@ -32,11 +32,9 @@ WIDE_MAP[0x20] = 0x3000
 
 # D A N K modules by @deletescape vvv
 
+@spamcheck
 @run_async
 def owo(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if not message.reply_to_message:
         message.reply_text("I need a message to meme.")
@@ -74,11 +72,9 @@ def owo(update, context):
         message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def stretch(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if not message.reply_to_message:
         message.reply_text("I need a message to meme.")
@@ -91,11 +87,9 @@ def stretch(update, context):
         message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def vapor(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     message = update.effective_message
     if not message.reply_to_message:
@@ -124,11 +118,9 @@ def vapor(update, context):
 
 # based on
 # https://github.com/wrxck/mattata/blob/master/plugins/copypasta.mattata
+@spamcheck
 @run_async
 def copypasta(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if not message.reply_to_message:
         message.reply_text("I need a message to meme.")
@@ -182,11 +174,9 @@ def copypasta(update, context):
         message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def bmoji(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if not message.reply_to_message:
         message.reply_text("I need a message to meme.")
@@ -198,11 +188,9 @@ def bmoji(update, context):
         message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def forbesify(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.text
@@ -229,11 +217,9 @@ def forbesify(update, context):
     message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def spongemocktext(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.text
@@ -244,11 +230,9 @@ def spongemocktext(update, context):
     message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def clapmoji(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if not message.reply_to_message:
         message.reply_text("I need a message to meme.")
@@ -259,11 +243,9 @@ def clapmoji(update, context):
         message.reply_to_message.reply_text(reply_text)
 
 
+@spamcheck
 @run_async
 def zalgotext(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     if message.reply_to_message:
         data = message.reply_to_message.text
@@ -278,11 +260,9 @@ def zalgotext(update, context):
 # shitty maymay modules made by @divadsn vvv
 
 
+@spamcheck
 @run_async
 def chinesememes(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
     message = update.effective_message
     maxnum = urllib.request.urlopen(MAXNUMURL)
@@ -307,11 +287,9 @@ def chinesememes(update, context):
 
 
 # shitty maymay modules made by @divadsn ^^^
+@spamcheck
 @run_async
 def shout(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     args = context.args
 
     if len(args) == 0:

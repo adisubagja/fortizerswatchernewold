@@ -8,7 +8,7 @@ import bs4
 from telegram import Bot, Update, InlineKeyboardMarkup, InlineKeyboardButton, ParseMode
 from telegram.ext import CallbackQueryHandler, run_async
 
-from emilia import dispatcher, OWNER_ID, SUDO_USERS, spamfilters
+from emilia import dispatcher, OWNER_ID, SUDO_USERS, spamcheck
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.languages import tl
 
@@ -186,11 +186,8 @@ def get_anime_manga(mal_id, search_type, user_id):
 
 
 @run_async
+@spamcheck
 def anime(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-
     message = update.effective_message
     args = message.text.strip().split(" ", 1)
 
@@ -230,11 +227,8 @@ def anime(update, context):
 
 
 @run_async
+@spamcheck
 def manga(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-
     message = update.effective_message
     args = message.text.strip().split(" ", 1)
 
@@ -267,11 +261,8 @@ def manga(update, context):
 
 
 @run_async
+@spamcheck
 def character(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-
     message = update.effective_message
     args = message.text.strip().split(" ", 1)
 
@@ -338,11 +329,8 @@ def character(update, context):
 
 
 @run_async
+@spamcheck
 def upcoming(update, context):
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
-
     jikan = jikanpy.jikan.Jikan()
     upcoming = jikan.top('anime', page=1, subtype="upcoming")
 
