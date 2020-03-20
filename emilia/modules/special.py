@@ -471,6 +471,47 @@ def wiki(update, context):
 
 
 @run_async
+<<<<<<< HEAD
+=======
+def kamusbesarbahasaindonesia(update, context):
+	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
+	if spam == True:
+		return
+	msg = update.effective_message
+	chat_id = update.effective_chat.id
+	try:
+		args = update.effective_message.text.split(None, 1)
+		teks = args[1]
+		message = update.effective_message
+		try:
+			api = requests.get('http://kateglo.com/api.php?format=json&phrase='+teks).json()
+		except json.decoder.JSONDecodeError:
+			send_message(update.effective_message, "Hasil tidak ditemukan!", parse_mode=ParseMode.MARKDOWN)
+			return
+		#kamusid = KBBI(teks)
+		parsing = "***Hasil dari kata {} ({}) di {}***\n\n".format(api['kateglo']['phrase'], api['kateglo']['lex_class_name'], api['kateglo']['ref_source_name'])
+		if len(api['kateglo']['definition']) >= 6:
+			jarak = 5
+		else:
+			jarak = len(api['kateglo']['definition'])
+		for x in range(jarak):
+			parsing += "*{}.* {}".format(x+1, api['kateglo']['definition'][x]['def_text'])
+			contoh = api['kateglo']['definition'][x]['sample']
+			if contoh:
+				parsing += "\nContoh: `{}`".format(str(BeautifulSoup(contoh, "lxml")).replace('<html><body><p>', '').replace('</p></body></html>', ''))
+			parsing += "\n\n"
+		send_message(update.effective_message, parsing, parse_mode=ParseMode.MARKDOWN)
+
+	except IndexError:
+		send_message(update.effective_message, "Tulis pesan untuk mencari dari kamus besar bahasa indonesia")
+	except KBBI.TidakDitemukan:
+		send_message(update.effective_message, "Hasil tidak ditemukan")
+	else:
+		return
+
+
+@run_async
+>>>>>>> 3ccac2d30b761ea68044af3fe71b215919efb687
 def urbandictionary(update, context):
 	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
 	if spam == True:
@@ -521,6 +562,10 @@ LEAVECHAT_HANDLER = CommandHandler(["leavechat", "leavegroup", "leave"], leavech
 RAMALAN_HANDLER = DisableAbleCommandHandler("fortune", ramalan)
 TERJEMAH_HANDLER = DisableAbleCommandHandler(["tr", "tl"], terjemah)
 WIKIPEDIA_HANDLER = DisableAbleCommandHandler("wiki", wiki)
+<<<<<<< HEAD
+=======
+KBBI_HANDLER = DisableAbleCommandHandler("kbbi", kamusbesarbahasaindonesia)
+>>>>>>> 3ccac2d30b761ea68044af3fe71b215919efb687
 UD_HANDLER = DisableAbleCommandHandler("ud", urbandictionary, pass_args=True)
 LOG_HANDLER = DisableAbleCommandHandler("log", log, filters=Filters.user(OWNER_ID))
 REACT_HANDLER = DisableAbleCommandHandler("react", react)
@@ -536,5 +581,9 @@ dispatcher.add_handler(LEAVECHAT_HANDLER)
 dispatcher.add_handler(RAMALAN_HANDLER)
 dispatcher.add_handler(TERJEMAH_HANDLER)
 dispatcher.add_handler(WIKIPEDIA_HANDLER)
+<<<<<<< HEAD
+=======
+dispatcher.add_handler(KBBI_HANDLER)
+>>>>>>> 3ccac2d30b761ea68044af3fe71b215919efb687
 dispatcher.add_handler(UD_HANDLER)
 dispatcher.add_handler(LOG_HANDLER)

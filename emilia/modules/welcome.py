@@ -17,7 +17,7 @@ try:
 except:
 	pass
 from emilia.modules.helper_funcs.chat_status import user_admin, is_user_ban_protected, bot_can_restrict
-from emilia.modules.helper_funcs.misc import build_keyboard, revert_buttons
+from emilia.modules.helper_funcs.misc import build_keyboard_parser, revert_buttons
 from emilia.modules.helper_funcs.msg_types import get_welcome_type
 from emilia.modules.helper_funcs.string_handling import markdown_parser, \
 	escape_invalid_curly_brackets, extract_time
@@ -174,7 +174,7 @@ def new_member(update, context):
 						formatted_text = ""
 					# Build keyboard
 					buttons = sql.get_welc_buttons(chat.id)
-					keyb = build_keyboard(buttons)
+					keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					getsec, extra_verify, mutetime, timeout, timeout_mode, custom_text = sql.welcome_security(chat.id)
 
 					# If user ban protected don't apply security on him
@@ -246,7 +246,7 @@ def new_member(update, context):
 						else:
 							res = ""
 						buttons = sql.get_welc_buttons(chat.id)
-						keyb = build_keyboard(buttons)
+						keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					else:
 						res = sql.DEFAULT_WELCOME.format(first=first_name)
 						keyb = []
@@ -433,7 +433,7 @@ def check_bot_button(update, context):
 											 count=count, chatname=escape_markdown(chat.title), id=query.from_user.id, rules=rules)
 		# Build keyboard
 		buttons = sql.get_welc_buttons(chat.id)
-		keyb = build_keyboard(buttons)
+		keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 		getsec, extra_verify, mutetime, timeout, timeout_mode, custom_text = sql.welcome_security(chat.id)
 		keyboard = InlineKeyboardMarkup(keyb)
 		# Send message
@@ -465,7 +465,7 @@ def check_bot_button(update, context):
 								  fullname=escape_markdown(fullname), username=username, mention=mention,
 								  count=count, chatname=escape_markdown(chat.title), id=query.from_user.id, rules=rules)
 		buttons = sql.get_welc_buttons(chat.id)
-		keyb = build_keyboard(buttons)
+		keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 	else:
 		res = sql.DEFAULT_WELCOME.format(first=first_name)
 		keyb = []
@@ -525,7 +525,7 @@ def left_member(update, context):
 					formatted_text = ""
 				# Build keyboard
 				buttons = sql.get_gdbye_buttons(chat.id)
-				keyb = build_keyboard(buttons)
+				keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 				keyboard = InlineKeyboardMarkup(keyb)
 				# Send message
 				try:
@@ -556,7 +556,7 @@ def left_member(update, context):
 				else:
 					res = ""
 				buttons = sql.get_gdbye_buttons(chat.id)
-				keyb = build_keyboard(buttons)
+				keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 
 			else:
 				res = sql.DEFAULT_GOODBYE
@@ -733,7 +733,7 @@ def welcome(update, context):
 
 			else:
 				if buttons:
-					keyb = build_keyboard(buttons)
+					keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					keyboard = InlineKeyboardMarkup(keyb)
 				else:
 					keyboard = None
@@ -747,7 +747,7 @@ def welcome(update, context):
 
 			else:
 				if buttons:
-					keyb = build_keyboard(buttons)
+					keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					keyboard = InlineKeyboardMarkup(keyb)
 				else:
 					keyboard = None
@@ -789,7 +789,7 @@ def goodbye(update, context):
 
 			else:
 				if buttons:
-					keyb = build_keyboard(buttons)
+					keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					keyboard = InlineKeyboardMarkup(keyb)
 				else:
 					keyboard = None
@@ -803,7 +803,7 @@ def goodbye(update, context):
 				
 			else:
 				if buttons:
-					keyb = build_keyboard(buttons)
+					keyb = build_keyboard_parser(context.bot, chat.id, buttons)
 					keyboard = InlineKeyboardMarkup(keyb)
 				else:
 					keyboard = None
