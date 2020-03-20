@@ -11,7 +11,7 @@ from telegram.ext import MessageHandler, Filters, CommandHandler, run_async, Cal
 from telegram.utils.helpers import mention_markdown, mention_html, escape_markdown
 
 import emilia.modules.sql.welcome_sql as sql
-from emilia import dispatcher, OWNER_ID, LOGGER, spamfilters
+from emilia import dispatcher, OWNER_ID, SUDO_USERS, LOGGER, spamfilters
 try:
 	from emilia import SPAMWATCH_TOKEN
 except:
