@@ -434,12 +434,7 @@ def get_settings(update, context):
 
 
 @run_async
-<<<<<<< HEAD
-def source(bot: Bot, update: Update):
-=======
-@spamcheck
-def donate(update, context):
->>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
+def source(update, context):
     user = update.effective_message.from_user
     chat = update.effective_chat  # type: Optional[Chat]
 

@@ -168,7 +168,6 @@ try:
 	antispam_module = True
 except ModuleNotFoundError:
 	antispam_module = False
-<<<<<<< HEAD
 	LOGGER.info("Note: Can't load antispam module. This is an optional.")
 
 def spamfilters(text, user_id, chat_id, message):
@@ -191,8 +190,6 @@ def spamfilters(text, user_id, chat_id, message):
 		return True
 	else:
 		return False
-=======
->>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 
 
 def spamcheck(func):

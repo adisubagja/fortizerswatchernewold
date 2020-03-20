@@ -15,11 +15,7 @@ from telegram import ParseMode
 from telegram.ext import CommandHandler, run_async, Filters
 from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
-<<<<<<< HEAD
 from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, spamfilters
-=======
-from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, spamcheck, MAPS_API
->>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 from emilia.__main__ import STATS, USER_INFO
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.helper_funcs.extraction import extract_user
@@ -643,84 +639,6 @@ def info(update, context):
 
 
 @run_async
-<<<<<<< HEAD
-=======
-@spamcheck
-def get_time(update, context):
-    args = context.args
-    location = " ".join(args)
-    if location.lower() == context.bot.first_name.lower():
-        send_message(update.effective_message, tl(update.effective_message, "Selalu ada waktu banned untukku!"))
-        context.bot.send_sticker(update.effective_chat.id, BAN_STICKER)
-        return
-
-    res = requests.get(GMAPS_LOC, params=dict(address=location, key=MAPS_API))
-    print(res.text)
-
-    if res.status_code == 200:
-        loc = json.loads(res.text)
-        if loc.get('status') == 'OK':
-            lat = loc['results'][0]['geometry']['location']['lat']
-            long = loc['results'][0]['geometry']['location']['lng']
-
-            country = None
-            city = None
-
-            address_parts = loc['results'][0]['address_components']
-            for part in address_parts:
-                if 'country' in part['types']:
-                    country = part.get('long_name')
-                if 'administrative_area_level_1' in part['types'] and not city:
-                    city = part.get('long_name')
-                if 'locality' in part['types']:
-                    city = part.get('long_name')
-
-            if city and country:
-                location = "{}, {}".format(city, country)
-            elif country:
-                location = country
-
-            timenow = int(datetime.utcnow().timestamp())
-            res = requests.get(GMAPS_TIME, params=dict(location="{},{}".format(lat, long), timestamp=timenow))
-            if res.status_code == 200:
-                offset = json.loads(res.text)['dstOffset']
-                timestamp = json.loads(res.text)['rawOffset']
-                time_there = datetime.fromtimestamp(timenow + timestamp + offset).strftime("%H:%M:%S hari %A %d %B")
-                send_message(update.effective_message, "Sekarang pukul {} di {}".format(time_there, location))
-
-
-@run_async
-@spamcheck
-def get_time_alt(update, context):
-    args = context.args
-    if args:
-        location = " ".join(args)
-        if location.lower() == context.bot.first_name.lower():
-            send_message(update.effective_message, "Selalu ada waktu banned untukku!")
-            context.bot.send_sticker(update.effective_chat.id, BAN_STICKER)
-            return
-
-        res = requests.get('https://dev.virtualearth.net/REST/v1/timezone/?query={}&key={}'.format(location, MAPS_API))
-
-        if res.status_code == 200:
-            loc = res.json()
-            if len(loc['resourceSets'][0]['resources'][0]['timeZoneAtLocation']) == 0:
-                send_message(update.effective_message, tl(update.effective_message, "Lokasi tidak di temukan!"))
-                return
-            placename = loc['resourceSets'][0]['resources'][0]['timeZoneAtLocation'][0]['placeName']
-            localtime = loc['resourceSets'][0]['resources'][0]['timeZoneAtLocation'][0]['timeZone'][0]['convertedTime']['localTime']
-            if lang_sql.get_lang(update.effective_chat.id) == "id":
-                locale.setlocale(locale.LC_TIME, 'id_ID.UTF-8')
-                time = datetime.strptime(localtime, '%Y-%m-%dT%H:%M:%S').strftime("%H:%M:%S hari %A, %d %B")
-            else:
-                time = datetime.strptime(localtime, '%Y-%m-%dT%H:%M:%S').strftime("%H:%M:%S %A, %d %B")
-            send_message(update.effective_message, tl(update.effective_message, "Sekarang pukul `{}` di `{}`").format(time, placename), parse_mode="markdown")
-    else:
-        send_message(update.effective_message, tl(update.effective_message, "Gunakan `/time nama daerah`\nMisal: `/time jakarta`"), parse_mode="markdown")
-
-
-@run_async
->>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 def echo(update, context):
     message = update.effective_message
     chat_id = update.effective_chat.id
@@ -743,7 +661,6 @@ def echo(update, context):
 
 
 @run_async
-<<<<<<< HEAD
 def sudo_list(update, context):
     reply = "<b>Sudo Users:</b>\n"
     for sudo in SUDO_USERS:
@@ -767,9 +684,7 @@ def support_list(update, context):
 
 
 @run_async
-=======
 @spamcheck
->>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 def markdown_help(update, context):
     send_message(update.effective_message, tl(update.effective_message, "MARKDOWN_HELP").format(dispatcher.bot.first_name), parse_mode=ParseMode.HTML)
     send_message(update.effective_message, tl(update.effective_message, "Coba teruskan pesan berikut kepada saya, dan Anda akan lihat!"))
