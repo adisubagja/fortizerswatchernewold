@@ -108,8 +108,8 @@ def send(update, message, keyboard, backup_message):
 @run_async
 def new_member(update, context):
 	chat = update.effective_chat  # type: Optional[Chat]
-    user = update.effective_user  # type: Optional[User]
-    msg = update.effective_message  # type: Optional[Message]
+	user = update.effective_user  # type: Optional[User]
+	msg = update.effective_message  # type: Optional[Message]
 
 	should_welc, cust_welcome, cust_content, welc_type = sql.get_welc_pref(chat.id)
 
