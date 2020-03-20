@@ -176,9 +176,6 @@ def getVer(update, context):
 @spamcheck
 def github(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     text = message.text[len('/git '):]
     usr = get(f'https://api.github.com/users/{text}').json()
@@ -222,9 +219,6 @@ def github(update, context):
 @spamcheck
 def repo(update, context):
     args = context.args
-    spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-    if spam == True:
-        return
     message = update.effective_message
     text = message.text[len('/repo '):]
     usr = get(f'https://api.github.com/users/{text}/repos?per_page=40').json()
