@@ -3,6 +3,7 @@ import os
 import sys
 import time
 from datetime import datetime
+from functools import wraps
 
 import telegram.ext as tg
 
@@ -35,6 +36,7 @@ if ENV:
 
 	MESSAGE_DUMP = os.environ.get('MESSAGE_DUMP', None)
 	OWNER_USERNAME = os.environ.get("OWNER_USERNAME", None)
+	IS_DEBUG = os.environ.get("IS_DEBUG", False)
 
 	try:
 		SUDO_USERS = set(int(x) for x in os.environ.get("SUDO_USERS", "").split())
@@ -89,6 +91,10 @@ else:
 
 	MESSAGE_DUMP = Config.MESSAGE_DUMP
 	OWNER_USERNAME = Config.OWNER_USERNAME
+	try:
+		IS_DEBUG = Config.IS_DEBUG
+	except AttributeError:
+		IS_DEBUG = False
 
 	try:
 		SUDO_USERS = set(int(x) for x in Config.SUDO_USERS or [])
@@ -156,12 +162,13 @@ from emilia.modules.helper_funcs.handlers import CustomCommandHandler
 if CUSTOM_CMD and len(CUSTOM_CMD) >= 1:
 	tg.CommandHandler = CustomCommandHandler
 
-# Disable this (line 151) if you dont have a antispam script
 try:
 	from emilia.antispam import antispam_restrict_user, antispam_cek_user, detect_user
+	LOGGER.info("Note: AntiSpam loaded!")
 	antispam_module = True
 except ModuleNotFoundError:
 	antispam_module = False
+<<<<<<< HEAD
 	LOGGER.info("Note: Can't load antispam module. This is an optional.")
 
 def spamfilters(text, user_id, chat_id, message):
@@ -184,4 +191,35 @@ def spamfilters(text, user_id, chat_id, message):
 		return True
 	else:
 		return False
+=======
+>>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 
+
+def spamcheck(func):
+	@wraps(func)
+	def check_user(update, context, *args, **kwargs):
+		chat = update.effective_chat
+		user = update.effective_user
+		message = update.effective_message
+		# If msg from self, return True
+		if user.id == context.bot.id:
+			return False
+		if IS_DEBUG:
+			print("{} | {} | {} | {}".format(message.text or message.caption, user.id, message.chat.title, chat.id))
+		if antispam_module:
+			parsing_date = time.mktime(message.date.timetuple())
+			detecting = detect_user(user.id, chat.id, message, parsing_date)
+			if detecting:
+				return False
+			antispam_restrict_user(user.id, parsing_date)
+		if int(user.id) in SPAMMERS:
+			if IS_DEBUG:
+				print("^ This user is spammer!")
+			return False
+		elif int(chat.id) in GROUP_BLACKLIST:
+			dispatcher.bot.sendMessage(chat.id, "This group is in blacklist, i'm leave...")
+			dispatcher.bot.leaveChat(chat.id)
+			return False
+		return func(update, context, *args, **kwargs)
+
+	return check_user

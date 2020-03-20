@@ -24,7 +24,11 @@ from telegram import ParseMode, InlineKeyboardMarkup, InlineKeyboardButton
 from telegram.ext import CommandHandler, run_async, Filters
 from telegram.utils.helpers import escape_markdown, mention_html, mention_markdown
 
+<<<<<<< HEAD
 from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, spamfilters
+=======
+from emilia import dispatcher, OWNER_ID, SUDO_USERS, SUPPORT_USERS, WHITELIST_USERS, BAN_STICKER, API_WEATHER, spamcheck
+>>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 from emilia.__main__ import STATS, USER_INFO
 from emilia.modules.disable import DisableAbleCommandHandler
 from emilia.modules.helper_funcs.extraction import extract_user
@@ -34,6 +38,7 @@ from emilia.modules.sql import languages_sql as langsql
 from emilia.modules.languages import tl
 from emilia.modules.helper_funcs.alternate import send_message
 
+<<<<<<< HEAD
 
 reactions = [
     "( ͡° ͜ʖ ͡°)",
@@ -279,6 +284,65 @@ def rangry(update, context):
     else:
         message.reply_text(rangry)
 
+=======
+@run_async
+@spamcheck
+def stickerid(update, context):
+	msg = update.effective_message
+	if msg.reply_to_message and msg.reply_to_message.sticker:
+		send_message(update.effective_message, tl(update.effective_message, "Hai {}, Id stiker yang anda balas adalah :\n```{}```").format(mention_markdown(msg.from_user.id, msg.from_user.first_name), msg.reply_to_message.sticker.file_id),
+											parse_mode=ParseMode.MARKDOWN)
+	else:
+		send_message(update.effective_message, tl(update.effective_message, "Tolong balas pesan stiker untuk mendapatkan id stiker"),
+											parse_mode=ParseMode.MARKDOWN)
+
+@run_async
+@spamcheck
+def getsticker(update, context):
+	msg = update.effective_message
+	chat_id = update.effective_chat.id
+	if msg.reply_to_message and msg.reply_to_message.sticker:
+		send_message(update.effective_message, "Hai " + "[{}](tg://user?id={})".format(msg.from_user.first_name,
+											msg.from_user.id) + ", Silahkan cek file yang anda minta dibawah ini."
+											"\nTolong gunakan fitur ini dengan bijak!",
+											parse_mode=ParseMode.MARKDOWN)
+		context.bot.sendChatAction(chat_id, "upload_document")
+		file_id = msg.reply_to_message.sticker.file_id
+		newFile = context.bot.get_file(file_id)
+		newFile.download('sticker.png')
+		context.bot.sendDocument(chat_id, document=open('sticker.png', 'rb'))
+		context.bot.sendChatAction(chat_id, "upload_photo")
+		context.bot.send_photo(chat_id, photo=open('sticker.png', 'rb'))
+		
+	else:
+		send_message(update.effective_message, "Hai " + "[{}](tg://user?id={})".format(msg.from_user.first_name,
+											msg.from_user.id) + ", Tolong balas pesan stiker untuk mendapatkan gambar stiker",
+											parse_mode=ParseMode.MARKDOWN)
+
+@run_async
+@spamcheck
+def stiker(update, context):
+	chat_id = update.effective_chat.id
+	args = update.effective_message.text.split(None, 1)
+	message = update.effective_message
+	message.delete()
+	if message.reply_to_message:
+		context.bot.sendSticker(chat_id, args[1], reply_to_message_id=message.reply_to_message.message_id)
+	else:
+		context.bot.sendSticker(chat_id, args[1])
+
+@run_async
+@spamcheck
+def file(update, context):
+	chat_id = update.effective_chat.id
+	args = update.effective_message.text.split(None, 1)
+	message = update.effective_message
+	message.delete()
+	if message.reply_to_message:
+		context.bot.sendDocument(chat_id, args[1], reply_to_message_id=message.reply_to_message.message_id)
+	else:
+		context.bot.sendDocument(chat_id, args[1])
+>>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 
 @run_async
 def getlink(update, context):
@@ -317,10 +381,8 @@ def leavechat(update, context):
 			return
 
 @run_async
+@spamcheck
 def ping(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
 	start_time = time.time()
 	test = send_message(update.effective_message, "Pong!")
 	end_time = time.time()
@@ -329,10 +391,8 @@ def ping(update, context):
 						text=tl(update.effective_message, "Pong!\nKecepatannya: {0:.2f} detik").format(round(ping_time, 2) % 60))
 
 @run_async
+@spamcheck
 def ramalan(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
 	text = ""
 	if random.randint(1,10) >= 7:
 		text += random.choice(tl(update.effective_message, "RAMALAN_FIRST"))
@@ -340,10 +400,8 @@ def ramalan(update, context):
 	send_message(update.effective_message, text)    
 
 @run_async
+@spamcheck
 def terjemah(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
 	msg = update.effective_message
 	chat_id = update.effective_chat.id
 	getlang = langsql.get_lang(update.effective_message.from_user.id)
@@ -417,10 +475,8 @@ def terjemah(update, context):
 
 
 @run_async
+@spamcheck
 def wiki(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
-		return
 	msg = update.effective_message
 	chat_id = update.effective_chat.id
 	args = update.effective_message.text.split(None, 1)
@@ -471,10 +527,47 @@ def wiki(update, context):
 
 
 @run_async
-def urbandictionary(update, context):
-	spam = spamfilters(update.effective_message.text, update.effective_message.from_user.id, update.effective_chat.id, update.effective_message)
-	if spam == True:
+<<<<<<< HEAD
+=======
+@spamcheck
+def kamusbesarbahasaindonesia(update, context):
+	msg = update.effective_message
+	chat_id = update.effective_chat.id
+	try:
+		args = update.effective_message.text.split(None, 1)
+		teks = args[1]
+		message = update.effective_message
+		try:
+			api = requests.get('http://kateglo.com/api.php?format=json&phrase='+teks).json()
+		except json.decoder.JSONDecodeError:
+			send_message(update.effective_message, "Hasil tidak ditemukan!", parse_mode=ParseMode.MARKDOWN)
+			return
+		#kamusid = KBBI(teks)
+		parsing = "***Hasil dari kata {} ({}) di {}***\n\n".format(api['kateglo']['phrase'], api['kateglo']['lex_class_name'], api['kateglo']['ref_source_name'])
+		if len(api['kateglo']['definition']) >= 6:
+			jarak = 5
+		else:
+			jarak = len(api['kateglo']['definition'])
+		for x in range(jarak):
+			parsing += "*{}.* {}".format(x+1, api['kateglo']['definition'][x]['def_text'])
+			contoh = api['kateglo']['definition'][x]['sample']
+			if contoh:
+				parsing += "\nContoh: `{}`".format(str(BeautifulSoup(contoh, "lxml")).replace('<html><body><p>', '').replace('</p></body></html>', ''))
+			parsing += "\n\n"
+		send_message(update.effective_message, parsing, parse_mode=ParseMode.MARKDOWN)
+
+	except IndexError:
+		send_message(update.effective_message, "Tulis pesan untuk mencari dari kamus besar bahasa indonesia")
+	except KBBI.TidakDitemukan:
+		send_message(update.effective_message, "Hasil tidak ditemukan")
+	else:
 		return
+
+
+@run_async
+@spamcheck
+>>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
+def urbandictionary(update, context):
 	args = context.args
 	msg = update.effective_message
 	chat_id = update.effective_chat.id
@@ -527,10 +620,18 @@ REACT_HANDLER = DisableAbleCommandHandler("react", react)
 RHAPPY_HANDLER = DisableAbleCommandHandler("happy", rhappy)
 RANGRY_HANDLER = DisableAbleCommandHandler("angry", rangry)
 
+<<<<<<< HEAD
 dispatcher.add_handler(REACT_HANDLER)
 dispatcher.add_handler(RHAPPY_HANDLER)
 dispatcher.add_handler(RANGRY_HANDLER)
 dispatcher.add_handler(PING_HANDLER)
+=======
+#dispatcher.add_handler(PING_HANDLER)
+dispatcher.add_handler(STICKERID_HANDLER)
+#dispatcher.add_handler(GETSTICKER_HANDLER)
+dispatcher.add_handler(STIKER_HANDLER)
+dispatcher.add_handler(FILE_HANDLER)
+>>>>>>> 6d1b9174d78caae19d464cd485220270a52e38eb
 dispatcher.add_handler(GETLINK_HANDLER)
 dispatcher.add_handler(LEAVECHAT_HANDLER)
 dispatcher.add_handler(RAMALAN_HANDLER)
