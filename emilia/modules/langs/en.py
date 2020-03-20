@@ -33,34 +33,29 @@ Available commands are:
 # __main__
 	"Ada yang bisa saya bantu? 😊": "Is there anything I can help? 😊",
 	"start_text": """
-Hi {}, my name is {}! I am a group manager managed by [my master](tg://user?id={}).
-To get this bot status info and update, you can join our channel [Ayra's Bot News](https://t.me/AyraBotNews)
+Hi {}! My name is *{}* - I'm here to help you manage your groups!
+Click Help button to find out more about how to use me to my full potential.
 
-Any issue or need more help?
-Join our group [Emilia Official Support](https://t.me/EmiliaOfficial)!
+Follow [Hitsuki](https://t.me/HitsukiNews) ( @HitsukiNews ) if you want to keep up with the news, updates and bot downtime!
 
-You can find the list of available commands with /help.
+This bot is managed by @HitaloSama
 
-If you're enjoying using me, and/or would like to help me survive in the wild, hit /donate to help fund/upgrade my VPS!
+Want to add me to your group? [Click here!](t.me/LordHitsuki_BOT?startgroup=true)
 """,
 	"help_text": """
-Hey there! My name is *Emilia*.
-I'm a modular group management bot with a few fun extras! Have a look at the following for an idea of some of \
-the things I can help you with.
+Hey! My name is *Hitsuki*. I am a group management bot, here to help you get around and keep the order in your groups!
+I have lots of handy features, such as flood control, a warning system, a note keeping system, and even predetermined replies on certain keywords.
 
-*Main* commands available:
- - /start: start the bot
+*Main commands available:*
+ - /start: cool command to check if the bot is alive or not.
  - /help: PM's you this message.
  - /help <module name>: PM's you info about that module.
- - /donate: information about how to donate!
+ - /setlang: change bot language.
  - /settings:
    - in PM: will send you your settings for all supported modules.
    - in a group: will redirect you to pm, with all that chat's settings.
 
-
 All commands can either be used with / or !.
-
-And the following:
 """,
 	"donate_text": """Hello, glad to hear you want to donate!
 Need a lot of work for [my creator](tg://user?id=388576209) to take me to my place now, and \
