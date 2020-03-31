@@ -9,7 +9,7 @@ Hai {}, nama saya {}! Saya seorang manajer grup yang dikelola oleh [master saya 
 Anda dapat menemukan daftar perintah yang tersedia dengan /help.
 """,
 	"help_text": """
-Hai! Nama saya adalah *Dirty*.
+Hai!.
 Saya adalah bot manajemen grup dengan beberapa kelebihan yang menyenangkan! Silahkan lihat berikut ini untuk beberapa ide dari \
 hal-hal yang bisa saya bantu.
 
@@ -36,9 +36,9 @@ Dia hanya orang biasa, jadi akan sangat membantu dia!
 Jika anda memang berminat untuk donate, silahkan kunjungi ayrahikari.github.io/donations.html, Terima kasih 😁""",
 	
 # Help modules
-	"language_help": """Tidak semua grup berbicara bahasa Indonesia; beberapa grup lebih suka Dirty menanggapi dalam bahasa mereka sendiri.
+	"language_help": """Tidak semua grup berbicara bahasa Indonesia; beberapa grup lebih suka menanggapi dalam bahasa mereka sendiri.
 
-Di sinilah terjemahan masuk; Anda dapat mengubah sebagian besar balasan Dirty menjadi bahasa pilihan Anda!
+Di sinilah terjemahan masuk; Anda dapat mengubah sebagian besar balasan menjadi bahasa pilihan Anda!
 
 Bahasa yang tersedia adalah:
 - 🇮🇩 Indonesia
@@ -81,8 +81,8 @@ Ketika ditandai sebagai AFK, sebutan apa pun akan dibalas dengan pesan untuk men
 """,
 	"backups_help": """
 *Hanya admin:*
- - /import: balas ke file cadangan grup butler/marie/rose/emilia/dirty untuk mengimpor sebanyak mungkin, membuat transfer menjadi sangat mudah! \
- Catatan bahwa file/foto tidak dapat diimpor karena pembatasan telegram. Kecuali backup dari Dirty.
+ - /import: balas ke file cadangan grup butler/marie/rose/emilia untuk mengimpor sebanyak mungkin, membuat transfer menjadi sangat mudah! \
+ Catatan bahwa file/foto tidak dapat diimpor karena pembatasan telegram. Kecuali backup dari Bot.
  - /export: export data grup, bisa di lakukan setiap waktu.
 """,
 	"bans_help": """
